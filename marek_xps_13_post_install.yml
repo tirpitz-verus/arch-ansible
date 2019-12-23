@@ -1,0 +1,444 @@
+---
+- name: post install tasks
+  hosts: localhost
+  tasks:
+
+  # time settings
+  - name: set timezone to Europe/Warsaw
+    file:
+      src: "/usr/share/zoneinfo/Europe/Warsaw"
+      dest: "/etc/localtime"
+      force: true
+      state: link
+  - name: generate adjtime
+    command: hwclock --systohc
+
+  - name: create vconsole.conf with PL
+    copy:
+      dest: "/etc/vconsole.conf"
+      content: |
+        KEYMAP=pl
+        FONT=Lat2-Terminus16.psfu.gz
+        FONT_MAP=8859-2
+  # hostname
+  - name: set hostname to marek_xps_13
+    copy:
+      dest: "/etc/hostname"
+      content: marek_xps_13
+  - name: set hosts contents
+    copy:
+      dest: "/etc/hosts"
+      content: |
+        127.0.0.1	localhost.localdomain		localhost
+        ::1		localhost.localdomain		localhost
+        127.0.1.1	marek_xps_13.localdomain	marek_xps_13
+  
+  - name: istall vim
+    pacman:
+      name: vim
+      state: present
+  
+  # prepare for wifi use    
+  - name: install dialog (for wifi-menu)
+    pacman:
+      name: "{{ item }}"
+      state: present
+    loop:
+      - dialog
+      - iw
+      - wpa_supplicant
+  - name: add a group wifi
+    group:
+      name: wifi
+      state: present
+  - name: set wifi-menu usage without password
+    lineinfile:
+      path: /etc/sudoers
+      state: present
+      line: '%wifi ALL=(ALL) NOPASSWD: /bin/wifi-menu'
+
+  - name: install grub
+    pacman:
+      name: grub
+      state: present
+  
+  - name: install efibootmgr
+    pacman:
+      name: efibootmgr
+      state: present
+
+  - name: install mikrocode upgreade
+    pacman:
+      name: intel-ucode
+      state: present    
+  
+  # configure grub
+  - name: check if grub set up
+    shell: ls /boot/grub
+    register: boot_grub_files
+  - name: add cryptdevice to grub
+    lineinfile:
+      state: present
+      dest: "/etc/default/grub"
+      backrefs: yes
+      regexp: '^(GRUB_CMDLINE_LINUX_DEFAULT=(?!.*cryptdevice)\"[^\"]+)(\".*)'
+      line: '\1 cryptdevice=/dev/nvme0n1p3:volgroup1\2'
+    when: boot_grub_files.stdout.find('grub.cfg') == -1
+  - name: create boot EFI directory
+    file:
+      path: "/boot/EFI"
+      state: directory
+  - name: mount UEFI partition
+    mount:
+      path: "/boot/EFI"
+      src: "/dev/nvme0n1p1"
+      state: mounted
+      fstype: vfat
+  - name: run grub-install
+    command: grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck
+    when: boot_grub_files.stdout.find('grub.cfg') == -1
+  - name: copy grub messages
+    copy:
+      dest: "/boot/grub/locale/en.mo"
+      src: "/usr/share/locale/en@quot/LC_MESSAGES/grub.mo"
+  - name: run grub-mkconfig
+    command: grub-mkconfig -o /boot/grub/grub.cfg
+    when: boot_grub_files.stdout.find('grub.cfg') == -1
+      
+  # swap file
+  - name: search for existing swapfile
+    shell: ls /
+    register: root_files_list
+  - name: allocate swapfile
+    command: fallocate -l 16G /swapfile
+    when: root_files_list.stdout.find('swapfile') == -1
+  - name: set swapfile permissions
+    file:
+      path: "/swapfile"
+      owner: root
+      group: root
+      mode: 600
+  - name: make swap file
+    command: mkswap /swapfile
+    when: root_files_list.stdout.find('swapfile') == -1
+  - name: mount swapfile
+    mount:
+      src: /swapfile
+      path: none
+      fstype: swap
+      state: present
+    when: root_files_list.stdout.find('swapfile') == -1
+
+  # install grephics drives
+  - name: install mesa
+    pacman:
+      name: "{{ item }}"
+      state: present
+    loop:
+      - mesa
+      - xf86-video-intel
+      - vulkan-intel
+
+  # install GUI
+  - name: install GUI software and fonts
+    pacman:
+      name: "{{ item }}"
+      state: present
+    loop:
+      - xorg-server
+      - arandr
+      - i3
+      - dmenu
+      - xorg-xinit
+      - powerline
+      - powerline-fonts
+      - powerline-vim
+      - ttf-dejavu
+      - ttf-freefont
+  - name: set font for i3
+    lineinfile:
+      state: present
+      dest: /etc/i3/config
+      regexp: '^font pango.*'
+      line: 'font pango: FreeMono 8'
+  - name: use Win for mod key in i3 config
+    replace:
+      path: /etc/i3/config
+      regexp: 'Mod1'
+      replace: 'Mod4'
+  - name: for root copy i3 config
+    copy:
+      src: /etc/i3/config
+      dest: /root/.config/i3/config
+  - name: create vimrc with powerline settings
+    lineinfile:
+      dest: /etc/vimrc
+      line: let g:powerline_pycmd="py3"
+  - name: set HDPI settings for all X
+    copy:
+      dest: /etc/X11/xinit/.Xresources
+      content: |
+        Xft.dpi:	220
+        Xft.autohint:	0
+        Xft.lcdfilters: lcddefault
+        Xft.hintstyle:	hintfull
+        Xft.hinting:	1
+        Xft.antialias:	1
+        Xft.rgba:	rgb
+  - name: xinit for root
+    copy:
+      src: /etc/X11/xinit/xinitrc
+      dest: /root/.xinitrc
+      mode: u+rwx
+  - name: for root change twm to i3 in .xinitrc
+    lineinfile:
+      state: present
+      dest: /root/.xinitrc
+      regexp: '^twm.*'
+      line: 'exec i3'
+  
+  # setup GUI greeter
+  - name: install xdm
+    pacman:
+      name: xdm-archlinux
+      state: present
+  - name: enable xdm
+    systemd:
+      name: xdm-archlinux
+      enabled: true 
+
+  # setup sudo
+  - name: install sudo
+    pacman:
+      name: sudo
+      state: present
+  - name: add wheel group
+    group:
+      name: wheel
+      state: present
+  - name: add group wheel to sudoers
+    lineinfile:
+      dest: /etc/sudoers
+      state: present
+      line: '%wheel ALL=(ALL) ALL'
+      validate: 'visudo -cf %s'
+
+  # allow users to update the system
+  - name: create systemupdater group
+    group:
+      name: systemupdater
+      state: present
+  - name: install pacmatic
+    pacman:
+      name: pacmatic
+      state: present
+  - name: allow systemupdaters to upgreade the system
+    lineinfile:
+      dest: /etc/sudoers
+      state: present
+      line: '%systemupdater ALL=(ALL) NOPASSWD: /bin/pacmatic -Syu'
+      validate: 'visudo -cf %s'
+
+  # create non-root user accounts
+  - name: create account marek
+    user:
+      name: marek
+      create_home: yes
+      groups: wheel,wifi,systemupdater
+    
+  # enable periodic TRIM on SSD
+  - name: start fstrim
+    systemd:
+      name: fstrim.timer
+      state: started
+      enabled: yes
+
+  # setup ansible for AUR
+  - name: install required packages
+    pacman:
+      name: patch
+      state: present
+  - name: create user aur_builder
+    user:
+      name: aur_builder
+      group: wheel
+  - name: allow user aur_builder to run pacman without password
+    lineinfile:
+      path: /etc/sudoers.d/11-install-aur_builder
+      line: 'aur_builder ALL=(ALL) NOPASSWD: /usr/bin/pacman'
+      create: yes
+      validate: 'visudo -cf %s'
+  - name: create ansible plugins dir
+    file:
+      path: /usr/share/ansible/plugins/modules
+      state: directory
+  - name: checkout ansible-aur-git
+    git:
+      repo: 'https://github.com/kewlfft/ansible-aur.git'
+      dest: /usr/share/ansible/plugins/modules
+      version: v0.22
+
+  # stop pacman cache bloat
+  - name: install pacman-contrib
+    pacman:
+      name: pacman-contrib
+      state: present
+  - name: create hooks directory
+    file:
+      path: /etc/pacman.d/hooks
+      state: directory
+  - name: run paccache post-upgreade
+    copy:
+      dest: /etc/pacman.d/hooks/run-paccache.hook
+      content: |
+        [Trigger]
+        Operation = Remove
+        Operation = Install
+        Operation = Upgrade
+        Type = Package
+        Target = *
+        [Action]
+        Description = Keep the last cache and the currently installed.
+        When = PostTransaction
+        Exec = /usr/bin/paccache -rvk2
+
+  # resfresh pacman mirrors automatically
+  - name: install reflector
+    pacman:
+      name: reflector
+      state: present
+  - name: install pacman-mirrorlist
+    pacman:
+      name: pacman-mirrorlist
+      state: present
+  - name: create pacman hook for reflector
+    copy:
+      dest: /etc/pacman.d/hooks/run-reflector.hook
+      content: |
+        [Trigger]
+        Operation = Upgrade
+        Type = Package
+        Target = pacman-mirrorlist
+        [Action]
+        Description = Updating pacman-mirrorlist with reflector and removing pacnew...
+        When = PostTransaction
+        Depends = reflector
+        Exec = /bin/sh -c "reflector --age 24 --latest 50 --sort rate --save /etc/pacman.d/mirrorlist; rm -f /etc/pacman.d/mirrorlist.pacnew"
+
+  # usefull software
+  - name: install usefull software
+    pacman:
+      name: "{{ item }}"
+      state: present
+    loop:
+      - htop
+      - zip
+      - unzip
+      - terminator
+      - git
+      - firefox 
+
+  # install ssh and secure it
+  - name: install openssh
+    pacman:
+      name: openssh
+      state: present
+  - name: prevent root ssh login
+    lineinfile:
+      state: present
+      dest: /etc/ssh/sshd_config
+      regexp: '^#PermitRootLogin.*'
+      line: PermitRootLogin no
+  - name: prevent ssh password login
+    lineinfile:
+      state: present
+      dest: /etc/ssh/sshd_config
+      regexp: '^#PasswordAuthentication yes.*'
+      line: PasswordAuthentication no
+  - name: restart sshd
+    systemd:
+      name: sshd
+      enabled: yes
+      state: restarted
+  
+  # setup sound
+  - name: install pulseaudio
+    pacman:
+      name: "{{ item }}"
+      state: present
+    loop:
+      - pulseaudio
+      - pavucontrol
+      - pulseaudio-alsa
+      - pulseaudio-bluetooth
+      - pulseaudio-equalizer
+
+  # setup locales
+  - name: uncomment en_US locale
+    lineinfile:
+      dest: /etc/locale.gen
+      regexp: en_US.UTF-8 UTF-8
+      line: en_US.UTF-8 UTF-8
+  - name: uncomment pl_pl locale
+    lineinfile:
+      dest: /etc/locale.gen
+      regexp: pl_PL.UTF-8 UTF-8
+      line: pl_PL.UTF-8 UTF-8
+  - name: run locale-gen
+    shell: locale-gen
+  - name: set localectl keymap
+    shell: localectl set-keymap pl
+  - name: set locale.conf
+    copy:
+      dest: /etc/local.conf
+      content: |
+        LANG=en_US.UTF-8
+        LC_CTYPE="en_US.UTF-8"
+        LC_NUMERIC="en_US.UTF-8"
+        LC_TIME="en_US.UTF-8"
+        LC_COLLATE="en_US.UTF-8"
+        LC_MONETARY="en_US.UTF-8"
+        LC_MESSAGES="en_US.UTF-8"
+        LC_PAPER="en_US.UTF-8"
+        LC_NAME="en_US.UTF-8"
+        LC_ADDRESS="en_US.UTF-8"
+        LC_TELEPHONE="en_US.UTF-8"
+        LC_MEASUREMENT="en_US.UTF-8"
+        LC_IDENTIFICATION="en_US.UTF-8"
+
+  # power saving
+  - name: install tlp
+    pacman:
+      name: "{{ item }}"
+      state: present
+    loop:
+      - tlp
+      - ethtool
+      - smartmontools
+      - x86_energy_perf_policy
+  - name: enable tlp services
+    systemd:
+      name: "{{ item }}"
+      enabled: yes
+    loop:
+      - tlp.service
+      - tlp-sleep.service
+  - name: mask rfkill services
+    systemd:
+      name: "{{ item }}"
+      state: stopped
+      masked: yes
+    loop:
+      - systemd-rfkill.service
+      - systemd-rfkill.socket
+
+  - name: install bluetooth software
+    pacman:
+      name: bluez-utils
+      state: present
+
+  - name: set journald size
+    lineinfile:
+      line: SystemMaxFiles=100
+      path: /etc/systemd/journald.conf
+      regexp: SystemMaxFiles
