@@ -1,0 +1,7 @@
+# with_SSD - enable trimming of SSD 
+
+  - name: start fstrim
+    systemd:
+      name: fstrim.timer
+      state: started
+      enabled: yes

@@ -1,0 +1,23 @@
+---
+- hosts: choinka
+  become_user: root
+  become: yes
+  gather_facts: False
+  roles:
+    - accounts_setup
+    - essential_admin_tools      
+    - in_poland
+    - with_hostname 
+    - with_sound
+    - with_SSD 
+    - with_GUI
+
+  vars:
+    with_GUI__is_4k: True
+
+  tasks:
+  - name: enable dhcpcd
+    systemd:
+      name: dhcpcd
+      state: started
+      enabled: yes

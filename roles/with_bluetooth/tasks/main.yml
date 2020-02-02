@@ -1,0 +1,7 @@
+# with_bluetooth - installs bluez
+tasks:
+
+  - name: install bluetooth software
+    pacman:
+      name: bluez-utils
+      state: present

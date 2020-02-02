@@ -1,0 +1,27 @@
+# with_battery - 
+tasks:
+
+  - name: install TLP
+    pacman:
+      name: "{{ item }}"
+      state: present
+    loop:
+      - tlp
+      - ethtool
+      - smartmontools
+      - x86_energy_perf_policy
+  - name: enable tlp services
+    systemd:
+      name: "{{ item }}"
+      enabled: yes
+    loop:
+      - tlp.service
+      - tlp-sleep.service
+  - name: mask rfkill services
+    systemd:
+      name: "{{ item }}"
+      state: stopped
+      masked: yes
+    loop:
+      - systemd-rfkill.service
+      - systemd-rfkill.socket

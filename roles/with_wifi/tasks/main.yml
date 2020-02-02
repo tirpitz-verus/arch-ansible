@@ -1,0 +1,29 @@
+# with_wifi - 
+
+
+  - name: install dialog (for wifi-menu)
+    pacman:
+      name: "{{ item }}"
+      state: present
+    loop:
+      - dialog
+      - iw
+      - wpa_supplicant
+  - name: add a group wifi
+    group:
+      name: wifi
+      state: present
+  - name: set wifi software usage without password
+    blockinfile:
+      path: /etc/sudoers
+      marker: "{mark} ansible managed"
+      block: |
+        '%wifi ALL=(ALL) NOPASSWD: /bin/wifi-menu'
+        '%wifi ALL=(ALL) NOPASSWD: /bin/netctl'
+      validate: 'visudo -cf %s'
+  - name: add userts to groups
+    user:
+      name: "{{ item }}"
+      append: True
+      groups: wifi 
+    loop: "{{ users_to_setup }}"

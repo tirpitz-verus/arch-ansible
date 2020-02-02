@@ -1,0 +1,22 @@
+# with_sound - installs sound software
+
+  - name: install pulseaudio
+    pacman:
+      name: "{{ item }}"
+      state: present
+    loop:
+      - pulseaudio
+      - pavucontrol
+      - pulseaudio-alsa
+      - pulseaudio-equalizer
+  - name: check if bluetooth present
+    shell: "dmesg | grep -i blue"
+    register: bluetooth_grep_output
+    ignore_errors: True
+
+  - name: install pulseaudio for bluetooth
+    pacman:
+      name: pulseaudio-bluetooth
+      state: present
+    when: bluetooth_grep_output.stdout != ""
+

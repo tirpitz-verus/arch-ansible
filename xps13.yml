@@ -1,7 +1,20 @@
 ---
-- name: cofiguration for xps13
-  hosts: localhost
-  connection: local
+- hosts: xps13
+  become_user: root
+  become: yes
+  gather_facts: False
+  roles:
+    - accounts_setup
+    - essential_admin_tools      
+    - in_poland
+    - with_hostname  
+    - with_bluetooth
+    - with_battery  
+    - with_sound
+    - with_SSD  
+    - with_wifi
+    - with_swapfile 
+    - with_GUI
 
 
   vars_prompt:
@@ -9,23 +22,8 @@
       prompt: "Enter password"
       private: yes
 
-
   tasks:
 
-  - name: instal pgp
-    become: yes
-    pacman:
-      name: gnupg
-
-  - name: install zsh
-    become: yes
-    pacman:
-      name: "{{ item }}"
-      state: present
-    loop:
-      - zsh
-      - zsh-completions
-      - python-pexpect
   - name: check shell
     command: "echo $SHELL"
     register: my_shell
@@ -35,30 +33,7 @@
       responses:
         (?!)password: "{{ my_password }}"
     when: my_shell.stdout.find('/bin/zsh') == -1
-  - name: define other zsh settings
-    blockinfile:
-      path: /home/marek/.zshrc
-      block: |
-        # aliases
-        function lahst() {
-            ls -lahst "$1"
-        }
 
-  - name: install wget
-    become: yes
-    pacman:
-      name: wget
-      state: present
-
-  - name: create directory for scripts
-    file:
-      path: /home/marek/bin
-      state: directory
-  - name: create profile file
-    copy:
-      dest: /home/marek/.profile
-      content: |
-        export PATH=~/bin:$PATH
         
   - name: create directory for systemd user units
     file:
@@ -86,12 +61,6 @@
     loop:
       - docker
       - docker-compose
-
-  - name: install keepassxc
-    become: yes
-    pacman:
-      name: keepassxc
-      state: present
 
   - name: name install spotify (music player)
     become: yes
@@ -151,82 +120,7 @@
       name: keepassxc
       state: present
 
-  - name: install dolphin (file manager)
-    become: true
-    pacman:
-      name: dolphin
-      state: present
 
-  - name: copy xinit
-    template:
-      src: xinitrc.j2
-      dest: /home/marek/.xinitrc
-      force: true
-
-  - name: install feh (for wallpaper)
-    become: yes
-    pacman:
-      name: feh
-      state: present
-  - name: run feh in i3
-    blockinfile:
-      path: /home/marek/.config/i3/config
-      block: exec_always feh --bg-fill /home/marek/Pictures/wallpaper.jpg
-      marker: "# {mark} ANSIBLE MANAGED BLOCK - wallpaper"
-
-  - name: bind controlls in i3
-    blockinfile:
-      path:  /home/marek/.config/i3/config
-      block: |
-        # volume level
-        bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% 
-        bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5%
-        bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle
-        # screen brightness
-        bindsym XF86MonBrightnessUp exec xbacklight -inc 20
-        bindsym XF86MonBrightnessDown exec xbacklight -dec 20
-      marker: "# {mark} ANSIBLE MANAGED BLOCK - bind controlls"
-
-  - name: rename i3 workspaces
-    blockinfile:
-      dest: /home/marek/.config/i3/config
-      marker: "# {mark} ANSIBLE MANAGED BLOCK - workspace names"
-      block: |
-        set $ws1 "1:" 
-        set $ws2 "2:"
-        set $ws3 "3:"
-        set $ws4 "4"
-        set $ws5 "5"
-        set $ws6 "6"
-        set $ws7 "7"
-        set $ws8 "8"
-        set $ws9 "9"
-        set $ws10 "10:"
-
-  - name: bind applications to i3 workspaces
-    blockinfile:
-      path: /home/marek/.config/i3/config
-      marker: "# {mark} ANSIBLE MANAGED BLOCK - bind applications"
-      block: |
-        assign [class="Terminator"] $ws1
-        exec terminator
-        assign [class="Firefox"] $ws2
-        exec firefox
-        assign [class="keepassxc"] $ws2
-        exec keepassxc
-        assign [class="jetbrains-idea"] $ws3
-        assign [class="Spotify"] $ws10
-        exec spotify-hdpi
-  - name: install xorg-xprop (to get x window class names)
-    become: yes
-    pacman:
-      name: xorg-xprop
-      state: present
-  - name: install font-awesome
-    become: yes
-    pacman:
-      name: otf-font-awesome
-      state: present
 
   - name: set Logitech MX Ergo acceleration
     lineinfile:
@@ -248,65 +142,6 @@
       groups: plugdev
       append: yes
 
-  - name: install i3blocks
-    become: yes
-    pacman:
-      name: i3blocks
-      state: present    
-  - name: setup i3blocks config
-    template:
-      dest: /home/marek/.config/i3/i3blocks.conf
-      src: i3blocks_conf.j2
-      force: true
-  - name: replace i3status with i3blocks
-    replace:
-      path: /home/marek/.config/i3/config
-      regexp: '^(.*status_command )i3status$'
-      replace: \1i3blocks -c /home/marek/.config/i3/i3blocks.conf
-
-  - name: protect id_rsa
-    file:
-      dest: /home/marek/.ssh/id_rsa
-      mode: 0400
-
-  - name: deja-dup - install
-    become: yes
-    pacman:
-      name: "{{ item }}"
-      state: present
-    loop:
-      - deja-dup
-      - python-psutil
-#   - name: deja-dup - include folders
-#    dconf:
-#      key: "/org/gnome/deja-dup/include-list"
-#      value: "['/home/marek/Documents', '/home/marek/Dropbox']"
-#      state: present
-#  - name: deja-dup - turn on periodic backup
-#    dconf:
-#      key: "/org/gnome/deja-dup/periodic"
-#      value: "true"
-#      state: present
-#  - name: deja-dup - set old files deletion time
-#    dconf:
-#      key: "/org/gnome/deja-dup/delete-after"
-#      value: "365"
-#      state: present
-#  - name: deja-dup - save to remote
-#    dconf:
-#      key: "/org/gnome/deja-dup/backend"
-#      value: "'remote'"
-#      state: present
-#  - name: deja-dup - set remote uri
-#    dconf:
-#      key: "/org/gnome/deja-dup/remote/uri"
-#      value: "'ssh://192.168.0.241'"
-#      state: present
-#  - name: deja-dup - set remote folder
-#    dconf:
-#      key: "/org/gnome/deja-dup/remote/folder"
-#      value: "'marek_xps'"
-#      state: present
 
   - name: check if idea is installed
     stat:
@@ -359,15 +194,6 @@
       owner: root
       mode: g=rwx
 
-  - name: install RandrR utils
-    become: yes
-    pacman:
-      name: "{{ item }}"
-      state: present
-    loop:
-      - xorg-xrandr
-      - xorg-xbacklight
-      - xorg-xinput
 
   - name: install prerequisits for persnal journal
     become: yes
@@ -408,14 +234,6 @@
 #      - mythes
 #      - mythes-pl
 
-  - name: enable multilib
-    become: yes
-    blockinfile:
-      path: /etc/pacman.conf
-      block: |
-        # enable multilib
-        [multilib]
-        Include = /etc/pacman.d/mirrorlist
   - name: install steam
     become: yes
     pacman:
@@ -428,28 +246,6 @@
       - lib32-libvdpau
       - steam
   
-  - name: install unrar
-    become: yes
-    pacman:
-      name: unrar
-      state: present
-
-  # vim
-  - name: install pip3
-    become: yes
-    pacman:
-      name: python-pip
-      state: present
-  - name: install powerline
-    pip:
-      name: powerline-status
-  - name: create custom vimrc
-    template:
-      dest: /home/marek/.vimrc
-      src: vimrc.j2
-      force: true
-      owner: marek
-      group: marek
 
   - name: install comunicators
     become: yes
@@ -489,18 +285,6 @@
     become: yes
     pacman:
       name: calibre
-      state: present
-
-  - name: install sc (spreadsheet calculator)
-    become: yes
-    pacman:
-      name: sc
-      state: present
-
-  - name: install lynx
-    become: yes
-    pacman:
-      name: lynx
       state: present
 
   - name: install gaming software
@@ -559,16 +343,6 @@
         name = Marek Lesiewski
         [core]
         editor=vim
-
-  - name: stuff for RPG paper maker
-    become: yes
-    pacman:
-      name: "{{ item }}"
-      state: present
-    loop:
-      - gcc-libs
-      - qt5-multimedia
-      - openssl-1.0
 
   - name: install tuxguitar
     become: yes

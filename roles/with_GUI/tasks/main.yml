@@ -1,0 +1,131 @@
+# with_GUI - install graphics drivers and windows
+
+#
+# install drivers
+#
+- name: check VGA
+  shell: lspci | grep VGA
+  register: vga_output
+  changed_when: False
+- name: install mesa
+  pacman:
+    name: "{{ item }}"
+    state: present
+  loop:    
+    - mesa
+    - libva-mesa-driver
+- name: install Radeon drivers
+  pacman:
+    name: "{{ item }}"
+    state: present
+  loop:    
+    - xf86-video-amdgpu
+    - vulkan-radeon
+  when: "'Radeon' in vga_output.stdout"
+- name: install Intell drivers
+  pacman:
+    name: "{{ item }}"
+    state: present
+  loop:    
+    - xf86-video-intel
+    - vulkan-intel
+  when: "'Intel' in vga_output.stdout"
+
+#
+# install GUI 
+#
+- name: install xorg, i3 and fonts
+  pacman:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - xorg-server
+    - xorg-xrandr
+    - xorg-xbacklight
+    - xorg-xinput
+    - xorg-xprop
+    - arandr
+    - i3-wm
+    - i3blocks
+    - feh
+    - dmenu
+    - xorg-xinit
+    #- powerline - ansible failed here
+    - powerline-fonts
+    #- powerline-vim - ansible failed here
+    - ttf-dejavu
+    #- ttf-freefont - ansible failed here
+    - otf-font-awesome
+    # greeter - graphical login screen
+    - xdm-archlinux
+
+#
+# setup x-org init
+#
+- name: copy xinit for users
+  template:
+    src: xinitrc.j2
+    dest: "/home/{{ item }}/.xinitrc"
+    force: true
+  loop: "{{ users_to_setup }}"
+  when: item != 'root'
+- name: copy xinit for root
+  template:
+    src: xinitrc.j2
+    dest: "/root/.xinitrc"
+    force: true
+- assert:
+    that: with_GUI__is_4k is defined
+    msg: "'with_GUI__is_4k' needs to be defined"
+- name: configure for 4K
+  template:
+    src: xresources.j2
+    dest: /etc/X11/xinit/.Xresources
+    owner: root
+    group: root
+  when: "with_GUI__is_4k"
+  
+#
+# setup i3
+#
+- name: register user templates
+  stat:
+    path: "{{ role_path }}/templates/{{ item }}_i3config.j2"
+  register: i3_user_templates
+  loop: "{{ users_to_setup }}"
+  changed_when: False
+- name: copy generic i3 config
+  template:
+    src: i3config.j2
+    dest: "/home/{{ item }}/.config/i3/config"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+  loop: "{{ users_to_setup }}"
+  when: item != 'root'
+- name: overwrite generic i3 config with per user template
+  template:
+    src: "{{ item.item }}_i3config.j2"
+    dest: "/home/{{ item.item }}/.config/i3/config"
+    owner: "{{ item.item }}"
+    group: "{{ item.item }}"
+  loop: "{{ i3_user_templates.results }}"
+  when: item.stat.exists 
+- name: copy generic i3 blocks config
+  template:
+    src: i3blocks.conf.j2
+    dest: "/home/{{ item }}/.config/i3/i3blocks.conf"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+  loop: "{{ users_to_setup }}"
+  when: item != 'root'
+
+
+#
+# setup GUI greeter
+#
+- name: enable xdm
+  systemd:
+    name: xdm-archlinux
+    enabled: true 
+
+

@@ -1,0 +1,8 @@
+# accounts_setup - sets up user accounts
+ 
+  - name: create accounts
+    user:
+      name: "{{ item }}"
+      create_home: yes
+    loop: "{{ users_to_setup }}"
+    when: item != 'root'

@@ -1,0 +1,25 @@
+# with_swapfile - 
+  
+  - name: search for existing swapfile
+    shell: ls /
+    register: root_files_list
+  - name: allocate swapfile
+    command: fallocate -l 16G /swapfile
+    when: root_files_list.stdout.find('swapfile') == -1
+  - name: set swapfile permissions
+    file:
+      path: "/swapfile"
+      owner: root
+      group: root
+      mode: 600
+  - name: make swap file
+    command: mkswap /swapfile
+    when: root_files_list.stdout.find('swapfile') == -1
+  - name: mount swapfile
+    mount:
+      src: /swapfile
+      path: none
+      fstype: swap
+      state: present
+    when: root_files_list.stdout.find('swapfile') == -1
+
