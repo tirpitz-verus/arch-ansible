@@ -1,5 +1,4 @@
 # with_battery - 
-tasks:
 
   - name: install TLP
     pacman:

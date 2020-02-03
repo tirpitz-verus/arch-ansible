@@ -67,6 +67,8 @@
     src: xinitrc.j2
     dest: "/home/{{ item }}/.xinitrc"
     force: true
+    owner: "{{ item }}"
+    group: "{{ item }}"
   loop: "{{ users_to_setup }}"
   when: item != 'root'
 - name: copy xinit for root
@@ -94,6 +96,14 @@
   register: i3_user_templates
   loop: "{{ users_to_setup }}"
   changed_when: False
+- name: create i3 dir
+  file:
+    path: "/home/{{ item }}/.config/i3"
+    state: directory
+    owner: "{{ item }}"
+    group: "{{ item }}"
+  loop: "{{ users_to_setup }}"
+  when: item != 'root'
 - name: copy generic i3 config
   template:
     src: i3config.j2

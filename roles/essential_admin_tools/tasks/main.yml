@@ -34,16 +34,29 @@
       # for zsh
       - python-pexpect
 
-
+  #
   # add multilib repo
-  - name: enable multilib repository
-    become: yes
-    blockinfile:
-      path: /etc/pacman.conf
-      block: |
-        # enable multilib
-        [multilib]
-        Include = /etc/pacman.d/mirrorlist
+  #
+  - name: check if multilib enabled
+    command: grep -Fxq "multilib" /etc/pacman.conf
+    register: multilib_present
+    check_mode: no
+    changed_when: no
+    ignore_errors: True
+  - name: enable multilib
+    block:
+      - name: enable multilib repository
+        become: yes
+        blockinfile:
+          path: /etc/pacman.conf
+          block: |
+            # enable multilib
+            [multilib]
+            Include = /etc/pacman.d/mirrorlist
+      - name: download pacman repos
+        command: pacman -Sy
+    when: multilib_present.rc == 1
+
 
 #
 # setup group WHEEL
@@ -175,3 +188,35 @@
       line: SystemMaxFiles=100
       path: /etc/systemd/journald.conf
       regexp: SystemMaxFiles
+
+  #
+  # setup oh-my-zsh
+  #
+  - name: clone oh-my-zsh for users
+    tags:
+      # Suppress warning: [ANSIBLE0006] git used in place of git module
+      # Git module doesn't allow us to set `core.autocrlf=input`.
+      - skip_ansible_lint
+    become_user: '{{ item }}'
+    # core.autocrlf=input prevents https://github.com/robbyrussell/oh-my-zsh/issues/4402
+    command: 'git clone -c core.autocrlf=input --depth=1 https://github.com/robbyrussell/oh-my-zsh.git .oh-my-zsh'
+    args:
+      chdir: '~{{ item }}'
+      creates: '~{{ item }}/.oh-my-zsh'
+    loop: "{{ users_to_setup }}"
+  - name: set permissions of oh-my-zsh for users
+    file:
+      path: '~{{ item }}/.oh-my-zsh'
+      # Prevent the cloned repository from having insecure permissions. Failing to do
+      # so causes compinit() calls to fail with "command not found: compdef" errors
+      # for users with insecure umasks (e.g., "002", allowing group writability).
+      mode: 'go-w'
+      recurse: yes
+    loop: "{{ users_to_setup }}"
+  - name: write .zshrc for users
+    become_user: '{{ item }}'
+    template:
+      src: zshrc.j2
+      dest: '~{{ item }}/.zshrc'
+      mode: 'u=rw,go=r'
+    loop: "{{ users_to_setup }}"

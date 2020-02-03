@@ -1,0 +1,79 @@
+---
+- hosts: computor
+  become_user: root
+  become: yes
+  gather_facts: False
+  roles:
+#    - accounts_setup
+    - essential_admin_tools      
+    - in_poland
+#    - with_hostname  
+#    - with_bluetooth
+#    - with_battery  
+#    - with_sound
+#    - with_SSD  
+#    - with_wifi
+#    - with_swapfile 
+#    - with_GUI
+#     - java_developer
+    
+  vars:
+    with_GUI__is_4k: False
+    ansible_connection: local
+    users_to_setup:
+      - root
+      - marek
+
+  tasks:
+    - name: check if pritunl client installed
+      command: 'grep "pritunl" /etc/pacman.conf'
+      register: pritunl_present
+      check_mode: no
+      changed_when: no
+      ignore_errors: True
+    - name: debug pritunl_present
+      debug:
+        var: pritunl_present
+    - name: enable pritunl repository
+      block:
+        - name: add pritunl repository
+          become: yes
+          blockinfile:
+            path: /etc/pacman.conf
+            block: |
+              # enable pritunl
+              [pritunl]
+              Server = https://repo.pritunl.com/stable/pacman
+        - name: download pritunl key
+          command: pacman-key --keyserver hkp://keyserver.ubuntu.com -r 7568D9BB55FF9E5287D586017AE645C0CF8E292A
+        - name: sign pritunl key
+          command: pacman-key --lsign-key 7568D9BB55FF9E5287D586017AE645C0CF8E292A
+        - name: download pacman repos
+          command: pacman -Sy
+      when: pritunl_present.rc != 1
+    - name: install pritunl client apps
+      pacman:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - pritunl-client-electron
+        - pritunl-client-electron-numix-theme
+    - name: install software 
+      become: yes
+      become_user: aur_builder
+      aur:
+        name: "{{ item }}"
+        skip_installed: false
+      loop:
+        # - dropbox
+        - slack-desktop
+        # - spotify curl -sS <https://download.spotify.com/debian/pubkey.gpg>| gpg --import
+    - name: install keepassxc
+      pacman:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - keepassxc
+    - name: enable dropbox service
+      become_user: marek
+      command: systemctl --user enable dropbox.service

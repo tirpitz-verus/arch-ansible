@@ -1,0 +1,48 @@
+# java_developer - 
+- name: install openjdk
+  pacman:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - jre-openjdk
+    - jdk-openjdk
+    - openjdk-doc
+    - java-openjfx 
+    - java-openjfx-doc
+    - gradle
+    - jdk8-openjdk
+- name: create group idea
+  group:
+    name: idea
+    state: present
+- name: check if idea is installed
+  stat:
+    path: /opt/idea
+  register: idea_dir
+  changed_when: False
+- name: install idea
+  block:
+    - name: download intellij idea
+      get_url:
+        url: https://download.jetbrains.com/idea/ideaIU-2019.3.2.tar.gz
+        dest: /var/tmp/ideaIU.tar.gz
+    - name: create idea dir
+      file:
+        path: /opt/idea
+        group: idea
+        owner: root
+        mode: g=rwx
+        state: directory
+    - name: unpack intellij
+      unarchive:
+        src: /var/tmp/ideaIU.tar.gz
+        dest: /opt/idea
+        group: idea
+        owner: root
+        mode: g=rwx
+  when: idea_dir.stat.exists == False
+- name: add marek to idea
+  user:
+    name: marek
+    groups: idea
+    append: yes

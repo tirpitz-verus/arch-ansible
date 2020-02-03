@@ -141,60 +141,7 @@
       name: marek
       groups: plugdev
       append: yes
-
-
-  - name: check if idea is installed
-    stat:
-      path: /opt/idea
-    register: idea_dir
-  - name: install openjdk
-    become: yes
-    pacman:
-      name: "{{ item }}"
-      state: present
-    loop:
-      - jre-openjdk
-      - jdk-openjdk
-      - openjdk-doc
-      - java-openjfx 
-      - java-openjfx-doc
-      - gradle
-      - jdk8-openjdk
-  - name: download intellij idea
-    get_url:
-      url: https://download.jetbrains.com/idea/ideaIU-2018.3.tar.gz
-      dest: /var/tmp/ideaIU.tar.gz
-    when: idea_dir.stat.exists == False
-  - name: create group idea
-    become: yes
-    group:
-      name: idea
-      state: present
-  - name: add marek to idea
-    become: yes
-    user:
-      name: marek
-      groups: idea
-      append: yes
-  - name: create idea dir
-    become: yes
-    file:
-      path: /opt/idea
-      group: idea
-      owner: root
-      mode: g=rwx
-      state: directory
-  - name: unpack intellij
-    become: yes
-    when: idea_dir.stat.exists == False
-    unarchive:
-      src: /var/tmp/ideaIU.tar.gz
-      dest: /opt/idea
-      group: idea
-      owner: root
-      mode: g=rwx
-
-
+  
   - name: install prerequisits for persnal journal
     become: yes
     pacman:
@@ -287,25 +234,6 @@
       name: calibre
       state: present
 
-  - name: install gaming software
-    become: yes
-    pacman:
-      name: "{{ item }}"
-      state: present
-    loop:
-      - libldap
-      - lib32-libldap
-      - vulkan-intel
-      - wine
-      - wine_gecko
-      - wine-mono
-      - lutris
-  - name: install dxvk-bin
-    become: yes
-    become_user: marek
-    aur:
-      name: dxvk-bin
-      skip_installed: false
 
   - name: install JavaScript dev things
     become: yes
