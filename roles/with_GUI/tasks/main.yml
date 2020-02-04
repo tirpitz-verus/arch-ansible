@@ -47,6 +47,7 @@
     - arandr
     - i3-wm
     - i3blocks
+    - i3lock 
     - feh
     - dmenu
     - xorg-xinit

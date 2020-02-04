@@ -9,7 +9,7 @@
     - in_poland
     - with_hostname  
     - with_bluetooth
-    - with_battery  
+#    - with_battery  
     - with_sound
     - with_SSD  
     - with_wifi
@@ -32,7 +32,7 @@
     # pritunl
     #
     - name: check if pritunl client installed
-      command: 'grep "pritunl" /etc/pacman.conf'
+      shell: 'grep "pritunl" /etc/pacman.conf'
       register: pritunl_present
       check_mode: no
       changed_when: no

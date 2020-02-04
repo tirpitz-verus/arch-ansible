@@ -13,13 +13,15 @@
     group:
       name: wifi
       state: present
-  - name: set wifi software usage without password
-    blockinfile:
+  - name: set wifi-menu useage without password
+    lineinfile:
       path: /etc/sudoers
-      marker: "{mark} ansible managed"
-      block: |
-        '%wifi ALL=(ALL) NOPASSWD: /bin/wifi-menu'
-        '%wifi ALL=(ALL) NOPASSWD: /bin/netctl'
+      line: '%wifi ALL=(ALL) NOPASSWD: /bin/wifi-menu'
+      validate: 'visudo -cf %s'
+  - name: set netctl usage without password
+    lineinfile:
+      path: /etc/sudoers
+      line: '%wifi ALL=(ALL) NOPASSWD: /bin/netctl'
       validate: 'visudo -cf %s'
   - name: add userts to groups
     user:
