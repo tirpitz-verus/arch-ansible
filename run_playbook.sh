@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
-pacmatic -Syu
-yay -Syu
+echo -n sudo Password: 
+read -s szPassword
 
-ansible-playbook -K -i $1_inv.yml $1.yml
+echo $szPassword | sudo -S pacmatic -Syu
+echo $szPassword | sudo -S yay -Syu
+
+echo $szPassword | sudo -S ansible-playbook -i $1_inv.yml $1.yml --extra-vars "ansible_become_password=$szPassword"
