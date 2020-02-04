@@ -69,6 +69,7 @@
     force: true
     owner: "{{ item }}"
     group: "{{ item }}"
+    mode: +x
   loop: "{{ users_to_setup }}"
   when: item != 'root'
 - name: copy xinit for root
