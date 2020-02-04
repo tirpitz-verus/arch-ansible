@@ -1,0 +1,49 @@
+# dropbox - 
+
+- assert:
+    that: dropbox_users is defined
+    msg: "'dropbox_users' needs to be defined"
+- name: check if dropbox is installed
+  command: pacman -Qi dropbox
+  register: dropbox_is_installed
+  ignore_errors: True
+  changed_when: False
+- name: debug dropbox_is_installed
+  debug:
+    var: dropbox_is_installed
+- name: install dropbox
+  block:
+    - name: download dropbox signature
+      get_url:
+        url: https://linux.dropbox.com/fedora/rpm-public-key.asc
+        dest: /tmp/dropbox-public-key.asc
+    - name: import dropbox signature
+      command: gpg --import /tmp/dropbox-public-key.asc
+    - name: install dropbox
+      become_user: aur_builder
+      aur:
+        name: dropbox
+    - name: enable dropbox tray
+      become_user: "{{ item }}"
+      copy:
+        src: override.conf
+        dest: "~{{ item }}/.config/systemd/user/dropbox.service.d/override.conf" 
+        owner: "{{ item }}"
+        group: "{{ item }}"
+      loop: "{{ dropbox_users }}"
+    # lets not allow dropbox to update itself 
+    - name: empty dropbox-dist
+      command: "rm -rf ~{{ item }}/.dropbox-dist"
+      loop: "{{ dropbox_users }}"
+    - name: create read-only dropbox-dist
+      command: "install -dm0 ~{{ item }}/.dropbox-dist"
+      loop: "{{ dropbox_users }}"
+  when: dropbox_is_installed.rc != 0
+- name: enable dropbox service
+  become_user: "{{ item }}"
+  systemd:
+    name: dropbox
+    state: started
+    scope: user
+    enabled: yes
+  loop: "{{ dropbox_users }}"

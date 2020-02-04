@@ -11,9 +11,13 @@
     - with_sound
     - with_SSD 
     - with_GUI
+    - java_developer
+    - dropbox
 
   vars:
     with_GUI__is_4k: True
+    dropbox_users:
+      - marek
 
   tasks:
   - name: enable dhcpcd

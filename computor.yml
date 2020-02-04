@@ -4,18 +4,19 @@
   become: yes
   gather_facts: False
   roles:
-#    - accounts_setup
+    - accounts_setup
     - essential_admin_tools      
     - in_poland
-#    - with_hostname  
-#    - with_bluetooth
-#    - with_battery  
-#    - with_sound
-#    - with_SSD  
-#    - with_wifi
-#    - with_swapfile 
-#    - with_GUI
-#     - java_developer
+    - with_hostname  
+    - with_bluetooth
+    - with_battery  
+    - with_sound
+    - with_SSD  
+    - with_wifi
+    - with_swapfile 
+    - with_GUI
+    - java_developer
+    - dropbox
     
   vars:
     with_GUI__is_4k: False
@@ -23,17 +24,19 @@
     users_to_setup:
       - root
       - marek
+    dropbox_users:
+      - marek
 
   tasks:
+    #
+    # pritunl
+    #
     - name: check if pritunl client installed
       command: 'grep "pritunl" /etc/pacman.conf'
       register: pritunl_present
       check_mode: no
       changed_when: no
       ignore_errors: True
-    - name: debug pritunl_present
-      debug:
-        var: pritunl_present
     - name: enable pritunl repository
       block:
         - name: add pritunl repository
@@ -58,14 +61,16 @@
       loop:
         - pritunl-client-electron
         - pritunl-client-electron-numix-theme
+    #
+    # slack
+    #
     - name: install software 
       become: yes
       become_user: aur_builder
       aur:
         name: "{{ item }}"
-        skip_installed: false
+        skip_installed: yes
       loop:
-        # - dropbox
         - slack-desktop
         # - spotify curl -sS <https://download.spotify.com/debian/pubkey.gpg>| gpg --import
     - name: install keepassxc
@@ -74,6 +79,3 @@
         state: present
       loop:
         - keepassxc
-    - name: enable dropbox service
-      become_user: marek
-      command: systemctl --user enable dropbox.service

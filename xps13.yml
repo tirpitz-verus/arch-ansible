@@ -22,36 +22,16 @@
       prompt: "Enter password"
       private: yes
 
+  vars:
+    with_GUI__is_4k: False
+    ansible_connection: local
+    users_to_setup:
+      - root
+      - marek
+    dropbox_users:
+      - marek
+  
   tasks:
-
-  - name: check shell
-    command: "echo $SHELL"
-    register: my_shell
-  - name: install oh-my-zsh
-    expect:
-      command: "curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh"
-      responses:
-        (?!)password: "{{ my_password }}"
-    when: my_shell.stdout.find('/bin/zsh') == -1
-
-        
-  - name: create directory for systemd user units
-    file:
-      path: /home/marek/.config/systemd/user
-      state: directory
-      owner: marek
-      group: marek
-  - name:
-    copy:
-      dest: /home/marek/.config/systemd/user/marek.targer
-      content: |
-        [Unit]
-        Description=Marek's target
-        
-        [Install]
-        Alias=default.target
-      owner: marek
-      group: marek
 
   - name: install docker
     become: yes
@@ -73,46 +53,6 @@
       dest: /home/marek/bin/spotify-hdpi
       content: spotify --force-device-scale-factor=2.0 %U
       mode: 0744
-
-  - name: install dropbox 
-    become: yes
-    become_user: marek
-    aur:
-      name: dropbox
-      skip_installed: false
-  - name: create dropbox systemd unit
-    copy:
-      dest: /home/marek/.local/share/systemd/user/dropbox-marek.service
-      content: |
-        [Unit]
-        Description=Dropbox service for marek
-        
-        [Service]
-        Type=simple
-        ExecStart=/home/marek/.dropbox-dist/dropboxd
-        Restart=on-failure
-        RestartSec=1
-        Environment=DISPLAY=:0
-
-        [Install]
-        WantedBy=multi-user.target
-      owner: marek
-      group: marek
-  - name: Register uid of user marek
-    command: id -u marek
-    register: user_uid
-  - name: reload systemd
-    become: yes
-    become_user: marek
-    command: systemctl --user daemon-reload
-    environment:
-      XDG_RUNTIME_DIR: /run/user/{{user_uid.stdout}}
-  - name: enable dropbox service
-    become: yes
-    become_user: marek
-    command: systemctl --user enable /home/marek/.local/share/systemd/user/dropbox-marek.service
-    environment:
-      XDG_RUNTIME_DIR: /run/user/{{user_uid.stdout}}
 
   - name: install keepassxc
     become: yes
