@@ -49,3 +49,8 @@
         LC_TELEPHONE="en_US.UTF-8"
         LC_MEASUREMENT="en_US.UTF-8"
         LC_IDENTIFICATION="en_US.UTF-8"
+
+  - name: set polish mirrors
+    copy:
+      src: mirrorlist
+      dest: /etc/pacman.d/mirrorlist

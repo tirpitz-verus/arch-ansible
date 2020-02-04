@@ -4,19 +4,19 @@
   become: yes
   gather_facts: False
   roles:
-    - accounts_setup
-    - essential_admin_tools      
+#    - accounts_setup
+#    - essential_admin_tools      
     - in_poland
-    - with_hostname  
-    - with_bluetooth
-    - with_battery  
-    - with_sound
-    - with_SSD  
-    - with_wifi
-    - with_swapfile 
-    - with_GUI
-    - java_developer
-    - dropbox
+#    - with_hostname  
+#    - with_bluetooth
+#    - with_battery  
+#    - with_sound
+#    - with_SSD  
+#    - with_wifi
+#    - with_swapfile 
+#    - with_GUI
+#    - java_developer
+#    - dropbox
     
   vars:
     with_GUI__is_4k: False
@@ -37,6 +37,8 @@
       check_mode: no
       changed_when: no
       ignore_errors: True
+    - debug:
+        var: pritunl_present
     - name: enable pritunl repository
       block:
         - name: add pritunl repository
