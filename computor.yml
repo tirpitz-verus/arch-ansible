@@ -4,19 +4,19 @@
   become: yes
   gather_facts: False
   roles:
-#    - accounts_setup
-#    - essential_admin_tools      
+    - accounts_setup
+    - essential_admin_tools      
     - in_poland
-#    - with_hostname  
-#    - with_bluetooth
-#    - with_battery  
-#    - with_sound
-#    - with_SSD  
-#    - with_wifi
-#    - with_swapfile 
-#    - with_GUI
-#    - java_developer
-#    - dropbox
+    - with_hostname  
+    - with_bluetooth
+    - with_battery  
+    - with_sound
+    - with_SSD  
+    - with_wifi
+    - with_swapfile 
+    - with_GUI
+    - java_developer
+    - dropbox
     
   vars:
     with_GUI__is_4k: False
@@ -37,8 +37,6 @@
       check_mode: no
       changed_when: no
       ignore_errors: True
-    - debug:
-        var: pritunl_present
     - name: enable pritunl repository
       block:
         - name: add pritunl repository
@@ -55,7 +53,7 @@
           command: pacman-key --lsign-key 7568D9BB55FF9E5287D586017AE645C0CF8E292A
         - name: download pacman repos
           command: pacman -Sy
-      when: pritunl_present.rc != 1
+      when: pritunl_present.rc != 0
     - name: install pritunl client apps
       pacman:
         name: "{{ item }}"
