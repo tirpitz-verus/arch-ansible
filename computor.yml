@@ -32,11 +32,12 @@
     # pritunl
     #
     - name: check if pritunl client installed
-      shell: 'grep "pritunl" /etc/pacman.conf'
+      shell: 'grep pritunl /etc/pacman.conf'
       register: pritunl_present
-      check_mode: no
-      changed_when: no
+      changed_when: False
       ignore_errors: True
+    - debug:
+        var: pritunl_present
     - name: enable pritunl repository
       block:
         - name: add pritunl repository
@@ -72,10 +73,34 @@
         skip_installed: yes
       loop:
         - slack-desktop
-        # - spotify curl -sS <https://download.spotify.com/debian/pubkey.gpg>| gpg --import
+    
+
     - name: install keepassxc
       pacman:
         name: "{{ item }}"
         state: present
       loop:
         - keepassxc
+    
+    #
+    # spotify
+    #
+    - name: check if spotify is installed
+      command: pacman -Qi spotify
+      register: spotify_is_installed
+      ignore_errors: True
+      changed_when: False
+    - name: install spotify
+      block:
+        - name: download spotify signature
+          get_url:
+            url: https://download.spotify.com/debian/pubkey.gpg
+            dest: /tmp/spotify-public-key.asc
+        - name: import spotify signature
+          command: gpg --import /tmp/spotify-public-key.asc
+        - name: install spotify
+          become_user: aur_builder
+          aur:
+            name: spotify
+            skip_installed: yes
+      when: spotify_is_installed.rc != 0

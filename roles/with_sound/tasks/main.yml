@@ -13,6 +13,7 @@
     shell: "dmesg | grep -i blue"
     register: bluetooth_grep_output
     ignore_errors: True
+    changed_when: False
 
   - name: install pulseaudio for bluetooth
     pacman:

@@ -3,6 +3,7 @@
   - name: search for existing swapfile
     shell: ls /
     register: root_files_list
+    changed_when: False
   - name: allocate swapfile
     command: fallocate -l 16G /swapfile
     when: root_files_list.stdout.find('swapfile') == -1

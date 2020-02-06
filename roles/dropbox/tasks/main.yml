@@ -8,9 +8,6 @@
   register: dropbox_is_installed
   ignore_errors: True
   changed_when: False
-- name: debug dropbox_is_installed
-  debug:
-    var: dropbox_is_installed
 - name: install dropbox
   block:
     - name: download dropbox signature

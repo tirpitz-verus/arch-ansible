@@ -46,3 +46,10 @@
     name: marek
     groups: idea
     append: yes
+- name: create idea start script
+  copy:
+    src: idea.sh
+    dest: ~marek/.local/bin/idea.sh
+    owner: marek
+    group: marek
+    mode: +x
