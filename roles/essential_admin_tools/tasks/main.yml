@@ -58,9 +58,9 @@
     when: multilib_present.rc == 1
 
 
-#
-# setup group WHEEL
-#
+  #
+  # setup group WHEEL
+  #
   - name: add wheel group
     group:
       name: wheel
@@ -85,8 +85,9 @@
       line: '%systemupdater ALL=(ALL) NOPASSWD: /usr/bin/pacmatic'
       validate: 'visudo -cf %s'
 
-
-  # add userts to groups and set shell
+  #
+  # add users to groups and set shell
+  #
   - name: setup users
     user:
       name: "{{ item }}"
@@ -96,37 +97,34 @@
     loop: "{{ users_to_setup }}"
     when: item != 'root'
 
-
+  #
   # stuff for vim
+  #
   - name: install powerline
     pip:
       name: powerline-status
   - name: copy .vimrc for non-root
     copy:
       src: .vimrc
-      dest: "/home/{{ item }}/.vimrc"
+      dest: "~{{ item }}/.vimrc"
       owner: "{{ item }}"
       group: "{{ item }}"
     loop: "{{ users_to_setup }}"
-    when: item != 'root'
-  - name: copy .vimrc for root
-    copy:
-      src: .vimrc
-      dest: "/.vimrc"
 
-
+  #
   # create bin dir for users
+  #
   - name: create directory for scripts
     file:
-      path: "/home/{{ item }}/.local/bin"
+      path: "~{{ item }}/.local/bin"
       state: directory
       owner: "{{ item }}"
       group: "{{ item }}"
     loop: "{{ users_to_setup }}"
-    when: item != 'root'
 
-        
+  #      
   # stop pacman cache bloat
+  #
   - name: create hooks directory
     file:
       path: /etc/pacman.d/hooks
@@ -146,8 +144,9 @@
         When = PostTransaction
         Exec = /usr/bin/paccache -rvk2
 
-
+  #
   # resfresh pacman mirrors automatically
+  #
   - name: create pacman hook for reflector
     copy:
       dest: /etc/pacman.d/hooks/run-reflector.hook
@@ -162,8 +161,9 @@
         Depends = reflector
         Exec = /bin/sh -c "reflector --age 24 --latest 50 --sort rate --save /etc/pacman.d/mirrorlist; rm -f /etc/pacman.d/mirrorlist.pacnew"
 
-
+  #
   # secure ssh
+  #
   - name: prevent root ssh login
     lineinfile:
       state: present

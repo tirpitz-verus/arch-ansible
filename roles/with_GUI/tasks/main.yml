@@ -66,18 +66,12 @@
 - name: copy xinit for users
   template:
     src: xinitrc.j2
-    dest: "/home/{{ item }}/.xinitrc"
+    dest: "~{{ item }}/.xinitrc"
     force: true
     owner: "{{ item }}"
     group: "{{ item }}"
     mode: +x
   loop: "{{ users_to_setup }}"
-  when: item != 'root'
-- name: copy xinit for root
-  template:
-    src: xinitrc.j2
-    dest: "/root/.xinitrc"
-    force: true
 - assert:
     that: with_GUI__is_4k is defined
     msg: "'with_GUI__is_4k' needs to be defined"
@@ -100,20 +94,18 @@
   changed_when: False
 - name: create i3 dir
   file:
-    path: "/home/{{ item }}/.config/i3"
+    path: "~{{ item }}/.config/i3"
     state: directory
     owner: "{{ item }}"
     group: "{{ item }}"
   loop: "{{ users_to_setup }}"
-  when: item != 'root'
 - name: copy generic i3 config
   template:
     src: i3config.j2
-    dest: "/home/{{ item }}/.config/i3/config"
+    dest: "~{{ item }}/.config/i3/config"
     owner: "{{ item }}"
     group: "{{ item }}"
   loop: "{{ users_to_setup }}"
-  when: item != 'root'
 - name: overwrite generic i3 config with per user template
   template:
     src: "{{ item.item }}_i3config.j2"
@@ -125,11 +117,10 @@
 - name: copy generic i3 blocks config
   template:
     src: i3blocks.conf.j2
-    dest: "/home/{{ item }}/.config/i3/i3blocks.conf"
+    dest: "~{{ item }}/.config/i3/i3blocks.conf"
     owner: "{{ item }}"
     group: "{{ item }}"
   loop: "{{ users_to_setup }}"
-  when: item != 'root'
 
 
 #
@@ -138,6 +129,7 @@
 - name: enable xdm
   systemd:
     name: xdm-archlinux
-    enabled: true 
+    enabled: yes
+    state: started
 
 

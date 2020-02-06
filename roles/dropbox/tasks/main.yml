@@ -21,6 +21,13 @@
       aur:
         name: dropbox
         skip_installed: yes
+    - name: create user dropbox service directory
+      file:
+        path: "~{{ item }}/.config/systemd/user/dropbox.service.d/" 
+        state: directory
+        owner: "{{ item }}"
+        group: "{{ item }}"
+      loop: "{{ dropbox_users }}"
     - name: enable dropbox tray
       become_user: "{{ item }}"
       copy:
@@ -31,12 +38,25 @@
       loop: "{{ dropbox_users }}"
     # lets not allow dropbox to update itself 
     - name: empty dropbox-dist
-      command: "rm -rf ~{{ item }}/.dropbox-dist"
+      file:
+        path: "~{{ item }}/.dropbox-dist"
+        state: absent
       loop: "{{ dropbox_users }}"
     - name: create read-only dropbox-dist
       command: "install -dm0 ~{{ item }}/.dropbox-dist"
       loop: "{{ dropbox_users }}"
+    - name: enable dropbox service
+      become_user: "{{ item }}"
+      systemd:
+        name: dropbox
+        state: started
+        scope: user
+        enabled: yes
+        # need to reload just after instalation
+        daemon_reload: yes
+  loop: "{{ dropbox_users }}"
   when: dropbox_is_installed.rc != 0
+  # on each run make sure the service is enabled and running
 - name: enable dropbox service
   become_user: "{{ item }}"
   systemd:
