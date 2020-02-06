@@ -23,6 +23,7 @@
       become_user: aur_builder
       aur:
         name: dropbox
+        skip_installed: yes
     - name: enable dropbox tray
       become_user: "{{ item }}"
       copy:
