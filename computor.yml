@@ -16,7 +16,7 @@
     - with_swapfile 
     - with_GUI
     - java_developer
-    - dropbox
+#    - dropbox
     
   vars:
     with_GUI__is_4k: False
@@ -81,7 +81,8 @@
         state: present
       loop:
         - keepassxc
-    
+        - docker
+        - docker-compose
     #
     # spotify
     #
@@ -104,3 +105,9 @@
             name: spotify
             skip_installed: yes
       when: spotify_is_installed.rc != 0
+     
+    - name: enable dhcpcd
+      systemd:
+        name: dhcpcd
+        state: started
+        enabled: yes
