@@ -63,7 +63,7 @@
         - pritunl-client-electron
         - pritunl-client-electron-numix-theme
     #
-    # slack
+    # slack & skype
     #
     - name: install software 
       become: yes
@@ -73,6 +73,7 @@
         skip_installed: yes
       loop:
         - slack-desktop
+        - skypeforlinux-stable-bin 
     
 
     - name: install keepassxc
@@ -81,8 +82,6 @@
         state: present
       loop:
         - keepassxc
-        - docker
-        - docker-compose
     #
     # spotify
     #
@@ -105,7 +104,11 @@
             name: spotify
             skip_installed: yes
       when: spotify_is_installed.rc != 0
-     
+    
+
+    #
+    # enable cable internet
+    #
     - name: enable dhcpcd
       systemd:
         name: dhcpcd
