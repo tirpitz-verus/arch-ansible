@@ -54,7 +54,7 @@
         enabled: yes
         # need to reload just after instalation
         daemon_reload: yes
-  loop: "{{ dropbox_users }}"
+      loop: "{{ dropbox_users }}"
   when: dropbox_is_installed.rc != 0
   # on each run make sure the service is enabled and running
 - name: enable dropbox service
