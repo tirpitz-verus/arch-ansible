@@ -1,4 +1,4 @@
-  - name: istall essential admin software
+  - name: install essential admin software
     pacman:
       name: "{{ item }}"
       state: present
@@ -22,17 +22,24 @@
       - terminator
       # browsers
       - firefox
-      - lynx
       - gnupg  
       - openssh
       # file manager
       - ranger
+      - w3m
       # cmd spreadsheet
       - sc
       - zsh
       - zsh-completions
       # for zsh
       - python-pexpect
+  - name: remove unwanted programs
+    pacman:
+      name: "{{ item }}"
+      state: absent
+    loop:
+      - lynx
+
 
   #
   # add multilib repo
