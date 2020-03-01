@@ -41,6 +41,14 @@
         owner: root
         mode: g=rwx
   when: idea_dir.stat.exists == False
+- name: idea dir ownership
+  file:
+    path: /opt/idea
+    group: idea
+    owner: root
+    mode: g=rwx
+    recurse: yes
+    state: directory
 - name: add marek to idea
   user:
     name: marek
