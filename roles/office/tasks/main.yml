@@ -1,0 +1,17 @@
+# install office software 
+- name: install office software
+  pacman:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - libreoffice-still
+    - libreoffice-still-pl
+    - hunspell
+    - hunspell-pl
+    - hyphen 
+    - mythes
+    - mythes-pl
+    # document viewer 
+    - xreader
+    # calculatror
+    - calc
