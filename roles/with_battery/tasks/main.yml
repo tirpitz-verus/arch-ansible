@@ -15,7 +15,6 @@
       enabled: yes
     loop:
       - tlp.service
-      - tlp-sleep.service
   - name: mask rfkill services
     systemd:
       name: "{{ item }}"
