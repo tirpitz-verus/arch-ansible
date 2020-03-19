@@ -60,7 +60,10 @@
       name: keepassxc
       state: present
 
-
+  - name: install intell CPU mikrocode upgreade
+    pacman:
+      name: intel-ucode
+      state: present
 
   - name: set Logitech MX Ergo acceleration
     lineinfile:
