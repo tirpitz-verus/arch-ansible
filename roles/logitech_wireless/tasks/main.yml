@@ -1,0 +1,17 @@
+# logitech_wireless - setup for using Logitech Unifying Receiver devices
+
+- name: install solaar
+  pacman:
+    name: solaar
+    state: present
+- name: create group plugdev (to run solaar)
+  group:
+    name: plugdev
+    state: present
+- name: add user to plugdev group
+  user:
+    name: "{{ item }}"
+    groups: plugdev
+    append: yes
+  loop: "{{ users_to_setup }}"
+  when: item != 'root'

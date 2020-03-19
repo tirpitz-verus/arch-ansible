@@ -196,3 +196,9 @@ exec_always feh --bg-fill /home/{{ item }}/.config/i3/wallpaper.jpg
 bar {
         status_command i3blocks -c /home/{{ item }}/.config/i3/i3blocks.conf
 }
+
+{% if with_GUI__is_4k %}
+# add pointer acceleration on 4K screen
+# 15 is the plugdev device id
+exec_always xinput --set-prop 15 'libinput Accel Speed' 1
+{% endif %}

@@ -13,6 +13,7 @@
     - with_GUI
     - java_developer
     - dropbox
+    - logitech_wireless
 
   vars:
     with_GUI__is_4k: True
@@ -57,4 +58,3 @@
           name: spotify
           skip_installed: yes
     when: spotify_is_installed.rc != 0
-

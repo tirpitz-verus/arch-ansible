@@ -64,26 +64,6 @@
     pacman:
       name: intel-ucode
       state: present
-
-  - name: set Logitech MX Ergo acceleration
-    lineinfile:
-      path: /home/marek/.config/i3/config
-      line: exec_always xinput --set-prop 10 'libinput Accel Speed' 1
-  - name: install solaar
-    become: yes
-    pacman:
-      name: solaar
-      state: present
-  - name: create group plugdev (to run solaar)
-    become: yes
-    group:
-      name: plugdev
-      state: present
-  - name: add user to plugdev group
-    user:
-      name: marek
-      groups: plugdev
-      append: yes
   
   - name: install prerequisits for persnal journal
     become: yes
