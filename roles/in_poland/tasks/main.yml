@@ -1,58 +1,56 @@
-  - name: set timezone to Europe/Warsaw
-    file:
-      src: "/usr/share/zoneinfo/Europe/Warsaw"
-      dest: "/etc/localtime"
-      force: true
-      state: link
- 
-  - name: generate adjtime
-    command: hwclock --systohc
+- name: set timezone to Europe/Warsaw
+  file:
+    src: "/usr/share/zoneinfo/Europe/Warsaw"
+    dest: "/etc/localtime"
+    force: true
+    state: link
 
-  - name: create vconsole.conf with PL
-    copy:
-      dest: "/etc/vconsole.conf"
-      content: |
-        KEYMAP=pl
-        FONT=Lat2-Terminus16.psfu.gz
-        FONT_MAP=8859-2
+- name: generate adjtime
+  command: hwclock --systohc
 
+- name: create vconsole.conf with PL
+  copy:
+    dest: "/etc/vconsole.conf"
+    content: |
+      KEYMAP=pl
+      FONT=Lat2-Terminus16.psfu.gz
+      FONT_MAP=8859-2
 
-  # setup locales
-  - name: uncomment en_US locale
-    lineinfile:
-      dest: /etc/locale.gen
-      regexp: en_US.UTF-8 UTF-8
-      line: en_US.UTF-8 UTF-8
-  - name: uncomment pl_pl locale
-    lineinfile:
-      dest: /etc/locale.gen
-      regexp: pl_PL.UTF-8 UTF-8
-      line: pl_PL.UTF-8 UTF-8
-  - name: run locale-gen
-    shell: locale-gen
-  - name: set localectl keymap
-    shell: localectl set-keymap pl
-  - name: set locale.conf
-    copy:
-      dest: /etc/locale.uconf
-      content: |
-        LANG=en_US.UTF-8
-        LC_CTYPE="en_US.UTF-8"
-        LC_NUMERIC="en_US.UTF-8"
-        LC_TIME="en_US.UTF-8"
-        LC_COLLATE="en_US.UTF-8"
-        LC_MONETARY="en_US.UTF-8"
-        LC_MESSAGES="en_US.UTF-8"
-        LC_PAPER="en_US.UTF-8"
-        LC_NAME="en_US.UTF-8"
-        LC_ADDRESS="en_US.UTF-8"
-        LC_TELEPHONE="en_US.UTF-8"
-        LC_MEASUREMENT="en_US.UTF-8"
-        LC_IDENTIFICATION="en_US.UTF-8"
-  
-  # xorg pl keyboard
-  - name: copy xorg keyboard conf
-    copy:
-      src: 00-keyboard.conf
-      dest: /etc/X11/xorg.conf.d/00-keyboard.conf
+# setup locales
+- name: uncomment en_US locale
+  lineinfile:
+    dest: /etc/locale.gen
+    regexp: en_US.UTF-8 UTF-8
+    line: en_US.UTF-8 UTF-8
+- name: uncomment pl_pl locale
+  lineinfile:
+    dest: /etc/locale.gen
+    regexp: pl_PL.UTF-8 UTF-8
+    line: pl_PL.UTF-8 UTF-8
+- name: run locale-gen
+  shell: locale-gen
+- name: set localectl keymap
+  shell: localectl set-keymap pl
+- name: set locale.conf
+  copy:
+    dest: /etc/locale.conf
+    content: |
+      LANG=en_US.UTF-8
+      LC_CTYPE="en_US.UTF-8"
+      LC_NUMERIC="en_US.UTF-8"
+      LC_TIME="en_US.UTF-8"
+      LC_COLLATE="en_US.UTF-8"
+      LC_MONETARY="en_US.UTF-8"
+      LC_MESSAGES="en_US.UTF-8"
+      LC_PAPER="en_US.UTF-8"
+      LC_NAME="en_US.UTF-8"
+      LC_ADDRESS="en_US.UTF-8"
+      LC_TELEPHONE="en_US.UTF-8"
+      LC_MEASUREMENT="en_US.UTF-8"
+      LC_IDENTIFICATION="en_US.UTF-8"
 
+# xorg pl keyboard
+- name: copy xorg keyboard conf
+  copy:
+    src: 00-keyboard.conf
+    dest: /etc/X11/xorg.conf.d/00-keyboard.conf
