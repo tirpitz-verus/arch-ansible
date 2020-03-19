@@ -15,6 +15,7 @@
     - with_wifi
     - with_swapfile 
     - with_GUI
+    - office
 
 
   vars_prompt:
@@ -77,32 +78,11 @@
       name: rednotebook
       skip_installed: false
 
-  - name: install document viwer
-    become: yes
-    pacman:
-      name: xreader
-      state: present
-
   - name: install typing trainer
     become: yes
     pacman:
       name: klavaro
       state: present
-
-  - name: install libre office
-    become: yes
-    pacman:
-      name: "{{ item }}"
-      state: present
-    loop:
-      - libreoffice-still
-      - libreoffice-still-pl
-      - hunspell
-      - hunspell-pl
-      - hyphen 
-      - hyphen-pl
-#      - mythes
-#      - mythes-pl
 
   - name: install steam
     become: yes
@@ -130,12 +110,6 @@
     become: yes
     pacman:
       name: weechat
-      state: present
-
-  - name: install calculator
-    become: yes
-    pacman:
-      name: calc
       state: present
 
   - name: install graphical software
