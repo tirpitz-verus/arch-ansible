@@ -1,0 +1,6 @@
+# with_network_cable - enable automatic cable network
+- name: enable dhcpcd
+  systemd:
+    name: dhcpcd
+    state: started
+    enabled: yes

@@ -5,7 +5,8 @@
   gather_facts: False
   roles:
     - accounts_setup
-    - essential_admin_tools      
+    - essential_admin_tools
+    - with_network_cable
     - in_poland
     - with_hostname  
     - with_bluetooth
@@ -107,13 +108,3 @@
             name: spotify
             skip_installed: yes
       when: spotify_is_installed.rc != 0
-    
-
-    #
-    # enable cable internet
-    #
-    - name: enable dhcpcd
-      systemd:
-        name: dhcpcd
-        state: started
-        enabled: yes

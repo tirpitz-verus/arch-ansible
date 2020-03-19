@@ -5,7 +5,8 @@
   gather_facts: False
   roles:
     - accounts_setup
-    - essential_admin_tools      
+    - essential_admin_tools
+    - with_network_cable
     - in_poland
     - with_hostname 
     - with_sound
@@ -29,12 +30,6 @@
         fullname: Marek Lesiewski
 
   tasks:
-  - name: enable dhcpcd
-    systemd:
-      name: dhcpcd
-      state: started
-      enabled: yes
-
 
   - name: install some usefull software
     pacman:
