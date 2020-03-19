@@ -1,21 +1,9 @@
-# developer - sets up all the stuff needed for developing software
-# requires 'developers' dict
-# developers:
-#   <username>:
-#     email: <email address>
-
-- assert:
-    that: developers is defined
-    msg: "'developers' dict needs to be defined"
-
-- name: install dependencies for development
+# java_developer - 
+- name: install openjdk
   pacman:
     name: "{{ item }}"
     state: present
   loop:
-    - git
-    - vim
-    # Java
     - jre-openjdk
     - jdk-openjdk
     - openjdk-doc
@@ -23,31 +11,10 @@
     - java-openjfx-doc
     - gradle
     - jdk8-openjdk
-    # docker
-    - docker
-    - docker-compose
-    # javascript
-    - nodejs
-    - npm
-    # C & C++
-    - make
-    - cmake
-    - gcc
-    # Vulkan
-    - vulkan-headers
-    - vulkan-tools
-    - vulkan-validation-layers
-    - vulkan-extra-layers
-    - vulkan-trace
-
-- name: create group developers
+- name: create group idea
   group:
-    name: developers
+    name: idea
     state: present
-
-#
-# install Intellij IDEA
-#
 - name: check if idea is installed
   stat:
     path: /opt/idea
@@ -58,77 +25,39 @@
     - name: download intellij idea
       get_url:
         url: https://download.jetbrains.com/idea/ideaIU-2019.3.2.tar.gz
-        dest: /tmp/ideaIU.tar.gz
+        dest: /var/tmp/ideaIU.tar.gz
     - name: create idea dir
       file:
         path: /opt/idea
-        group: developers
+        group: idea
         owner: root
         mode: g=rwx
         state: directory
     - name: unpack intellij
       unarchive:
-        src: /tmp/ideaIU.tar.gz
+        src: /var/tmp/ideaIU.tar.gz
         dest: /opt/idea
-        group: developers
+        group: idea
         owner: root
         mode: g=rwx
   when: idea_dir.stat.exists == False
 - name: idea dir ownership
   file:
     path: /opt/idea
-    group: developers
+    group: idea
     owner: root
     mode: g=rwx
     recurse: yes
     state: directory
-- name: add users to idea group
+- name: add marek to idea
   user:
-    name: "{{ item.key }}"
-    groups: developers
+    name: marek
+    groups: idea
     append: yes
-  loop: "{{ q('dict', developers) }}"
 - name: create idea start script
   copy:
     src: idea.sh
-    dest: ~{{ item.key }}/.local/bin/idea.sh
-    owner: "{{ item.key }}"
-    group: "{{ item.key }}"
+    dest: ~marek/.local/bin/idea.sh
+    owner: marek
+    group: marek
     mode: +x
-  loop: "{{ q('dict', developers) }}"
-
-#
-# setup git
-#
-- name: setup git
-  copy:
-    dest: ~{{ item.key }}/.gitconfig
-    owner: "{{ item.key }}"
-    group: "{{ item.key }}"
-    mode: u=rw,g=rw,o=r
-    content: |
-      [user]
-      email = "{{ item.value.email }}"
-      name = "{{ item.value.fullname }}"
-      [core]
-      editor=vim
-  loop: "{{ q('dict', developers) }}"
-
-#
-# install rust
-#
-- name: download Rust install script
-  get_url:
-    url: https://static.rust-lang.org/rustup.sh
-    dest: /tmp/rustup.sh
-    mode: +x
-- name: run Rust install script
-  # each user needs to run this script
-  become_user: "{{ item.key }}"
-  shell: /tmp/rustup.sh -y
-  loop: "{{ q('dict', developers) }}"
-- name: set wifi-menu useage without password
-  lineinfile:
-    path: ~{{ item.key }}/.profile
-    line: '"PATH=$HOME/.cargo/bin:$PATH"'
-  loop: "{{ q('dict', developers) }}"
