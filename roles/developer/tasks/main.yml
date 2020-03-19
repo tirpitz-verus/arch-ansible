@@ -127,7 +127,7 @@
   become_user: "{{ item.key }}"
   shell: /tmp/rustup.sh -y
   loop: "{{ q('dict', developers) }}"
-- name: set wifi-menu useage without password
+- name: add cargo dir to users PATH
   lineinfile:
     path: ~{{ item.key }}/.profile
     line: '"PATH=$HOME/.cargo/bin:$PATH"'
