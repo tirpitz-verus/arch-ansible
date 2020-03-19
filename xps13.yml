@@ -16,6 +16,7 @@
     - with_swapfile 
     - with_GUI
     - office
+    - developer
 
 
   vars_prompt:
@@ -24,24 +25,18 @@
       private: yes
 
   vars:
-    with_GUI__is_4k: False
-    ansible_connection: local
+    with_GUI__is_4k: True
     users_to_setup:
       - root
       - marek
     dropbox_users:
       - marek
-  
-  tasks:
+    developers:
+      marek:
+        email: tirpitz-verus@gmail.com
+        fullname: Marek Lesiewski
 
-  - name: install docker
-    become: yes
-    pacman:
-      name: "{{ item }}"
-      state: present
-    loop:
-      - docker
-      - docker-compose
+  tasks:
 
   - name: name install spotify (music player)
     become: yes
@@ -130,44 +125,6 @@
     pacman:
       name: calibre
       state: present
-
-
-  - name: install JavaScript dev things
-    become: yes
-    pacman:
-      name: "{{ item }}"
-      state: present
-    loop:
-      - nodejs
-      - npm
-
-  - name: install system programming tools
-    become: yes
-    pacman:
-      name: "{{ item }}"
-      state: present
-    loop:
-      - make
-      - cmake
-      - gcc
-      - vulkan-headers
-      - vulkan-tools
-      - vulkan-validation-layers
-      - vulkan-extra-layers
-      - vulkan-trace
-   
-  - name: setup git
-    copy:
-      dest: /home/marek/.gitconfig
-      owner: marek
-      group: marek
-      mode: u=rw,g=rw,o=r
-      content: |
-        [user]
-        email = tirpitz-verus@gmail.com
-        name = Marek Lesiewski
-        [core]
-        editor=vim
 
   - name: install tuxguitar
     become: yes

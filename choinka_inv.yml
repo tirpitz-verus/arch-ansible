@@ -3,7 +3,4 @@ all:
     choinka:
   vars:      
     ansible_connection: local
-    users_to_setup:
-      - root
-      - marek
 

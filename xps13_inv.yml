@@ -1,2 +1,5 @@
-[xps13]
-localhost
+all:
+  hosts:
+    xps13:
+  vars:
+    ansible_connection: local

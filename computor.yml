@@ -9,23 +9,26 @@
     - in_poland
     - with_hostname  
     - with_bluetooth
-#    - with_battery  
+    - with_battery
     - with_sound
     - with_SSD  
     - with_wifi
     - with_swapfile 
     - with_GUI
-    - java_developer
-#    - dropbox
+    - developer
+    - dropbox
     
   vars:
     with_GUI__is_4k: False
-    ansible_connection: local
     users_to_setup:
       - root
       - marek
     dropbox_users:
       - marek
+    developers:
+      marek:
+        email: marek.lesiewski@ipfdigital.com
+        fullname: Marek Lesiewski
 
   tasks:
     #

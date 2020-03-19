@@ -227,3 +227,10 @@
       dest: '~{{ item }}/.zshrc'
       mode: 'u=rw,go=r'
     loop: "{{ users_to_setup }}"
+  - name: write .profile for users
+    become_user: '{{ item }}'
+    template:
+      src: profile.j2
+      dest: '~{{ item }}/.profile'
+      mode: 'u=rw,go=r'
+    loop: "{{ users_to_setup }}"
