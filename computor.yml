@@ -18,6 +18,7 @@
     - with_GUI
     - developer
     - dropbox
+    - common_software
     
   vars:
     with_GUI__is_4k: False
@@ -66,45 +67,3 @@
       loop:
         - pritunl-client-electron
         - pritunl-client-electron-numix-theme
-    #
-    # slack & skype
-    #
-    - name: install software 
-      become: yes
-      become_user: aur_builder
-      aur:
-        name: "{{ item }}"
-        skip_installed: yes
-      loop:
-        - slack-desktop
-        - skypeforlinux-stable-bin 
-    
-
-    - name: install keepassxc
-      pacman:
-        name: "{{ item }}"
-        state: present
-      loop:
-        - keepassxc
-    #
-    # spotify
-    #
-    - name: check if spotify is installed
-      command: pacman -Qi spotify
-      register: spotify_is_installed
-      ignore_errors: True
-      changed_when: False
-    - name: install spotify
-      block:
-        - name: download spotify signature
-          get_url:
-            url: https://download.spotify.com/debian/pubkey.gpg
-            dest: /tmp/spotify-public-key.asc
-        - name: import spotify signature
-          command: gpg --import /tmp/spotify-public-key.asc
-        - name: install spotify
-          become_user: aur_builder
-          aur:
-            name: spotify
-            skip_installed: yes
-      when: spotify_is_installed.rc != 0

@@ -1,0 +1,70 @@
+# common_software - installs commonly used software
+
+#
+# spotify signature and runner script
+#
+- name: check if spotify is installed
+  command: pacman -Qi spotify
+  register: spotify_is_installed
+  ignore_errors: True
+  changed_when: False
+- name: install spotify signature
+  block:
+    - name: download spotify signature
+      get_url:
+        url: https://download.spotify.com/debian/pubkey.gpg
+        dest: /tmp/spotify-public-key.asc
+    - name: import spotify signature
+      command: gpg --import /tmp/spotify-public-key.asc
+  when: spotify_is_installed.rc != 0
+- name: create script for running spotify on 4K
+  become_user: '{{ item }}'
+  copy:
+    dest: ~{{ item }}/.local/bin/spotify-hdpi.sh
+    src: spotify-hdpi.sh
+    mode: +x
+  loop: "{{ users_to_setup }}"
+  when: "with_GUI__is_4k"
+
+#
+# install from official repo
+#
+- name: install common software
+  pacman:
+    name: "{{ item }}"
+    state: present
+  loop:
+    # manage passwords
+    - keepassxc
+    # graphics software
+    - gimp
+    - blender
+    - krita
+    # scan documents
+    - sane
+    - skanlite
+    # take screenshots
+    - deepin-screenshot
+    # manage e-books
+    - calibre
+    # learn to type faster
+    - klavaro
+    # required by rednotebook (from AUR)
+    - binutils
+
+#
+# install from AUR
+#
+- name: install common software from AUR
+  become_user: aur_builder
+  aur:
+    name: "{{ item }}"
+    skip_installed: yes
+  loop:
+    # music player
+    - spotify
+    # communicators
+    - slack-desktop
+    - skypeforlinux-stable-bin
+    # personal journal
+    - rednotebook

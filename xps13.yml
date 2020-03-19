@@ -17,7 +17,8 @@
     - with_GUI
     - office
     - developer
-
+    - dropbox
+    - common_software
 
   vars_prompt:
     - name: "my_password"
@@ -38,45 +39,9 @@
 
   tasks:
 
-  - name: name install spotify (music player)
-    become: yes
-    become_user: marek
-    aur:
-      name: spotify
-      skip_installed: false
-  - name: create script for running spotify
-    copy:
-      dest: /home/marek/bin/spotify-hdpi
-      content: spotify --force-device-scale-factor=2.0 %U
-      mode: 0744
-
-  - name: install keepassxc
-    become: yes
-    pacman:
-      name: keepassxc
-      state: present
-
   - name: install intell CPU mikrocode upgreade
     pacman:
       name: intel-ucode
-      state: present
-  
-  - name: install prerequisits for persnal journal
-    become: yes
-    pacman:
-      name: binutils
-      state: present
-  - name: install personal journal
-    become: yes
-    become_user: marek
-    aur:
-      name: rednotebook
-      skip_installed: false
-
-  - name: install typing trainer
-    become: yes
-    pacman:
-      name: klavaro
       state: present
 
   - name: install steam
@@ -90,44 +55,3 @@
       - lib32-libva
       - lib32-libvdpau
       - steam
-  
-
-  - name: install comunicators
-    become: yes
-    become_user: marek
-    aur:
-      name: "{{ item }}"
-      skip_installed: false
-    loop:
-      - slack-desktop
-      - skypeforlinux-stable-bin
-  - name: install communicators
-    become: yes
-    pacman:
-      name: weechat
-      state: present
-
-  - name: install graphical software
-    become: yes
-    pacman:
-      name: "{{ item }}"
-      state: present
-    loop:
-      - gimp
-      - sane
-      - skanlite
-      - krita
-      - blender
-      - deepin-screenshot
-
-  - name: install calibre
-    become: yes
-    pacman:
-      name: calibre
-      state: present
-
-  - name: install tuxguitar
-    become: yes
-    become_user: marek
-    aur:
-      name: tuxguitar
