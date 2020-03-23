@@ -40,10 +40,36 @@
     - vulkan-extra-layers
     - vulkan-trace
 
-- name: create group developers
+
+#
+# groups
+#
+- name: create group groups
   group:
-    name: developers
+    name: "{{ item }}"
     state: present
+  loop:
+    # for common stuff like idea dir ownership
+    - developers
+    # to run docker without sudo
+    - docker
+- name: add users to groups
+  user:
+    name: "{{ item.key }}"
+    groups: developers, docker
+    append: yes
+  loop: "{{ q('dict', developers) }}"
+
+
+#
+# start docker service
+#
+- name: start docker service
+  systemd:
+    name: docker
+    state: started
+    enabled: yes
+
 
 #
 # install Intellij IDEA
@@ -82,12 +108,6 @@
     mode: g=rwx
     recurse: yes
     state: directory
-- name: add users to idea group
-  user:
-    name: "{{ item.key }}"
-    groups: developers
-    append: yes
-  loop: "{{ q('dict', developers) }}"
 - name: create idea start script
   copy:
     src: idea.sh
@@ -96,6 +116,7 @@
     group: "{{ item.key }}"
     mode: +x
   loop: "{{ q('dict', developers) }}"
+
 
 #
 # setup git
@@ -113,6 +134,7 @@
       [core]
       editor=vim
   loop: "{{ q('dict', developers) }}"
+
 
 #
 # install rust
