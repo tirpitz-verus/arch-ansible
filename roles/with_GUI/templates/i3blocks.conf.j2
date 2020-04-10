@@ -9,6 +9,7 @@
 # Global properties
 separator=true
 separator_block_width=15
+SCRIPT_DIR=/home/{{ item }}/.config/i3
 
 [documentation]
 full_text=Documentation
@@ -20,6 +21,13 @@ color=#f12711
 color=#f5af19
 command=echo "Hello, $USER!"
 interval=once
+
+{% if wifi_interface_name is defined and wifi_interface_name|length %}
+[wifi]
+command=$SCRIPT_DIR/block_wifi
+INTERFACE={{ wifi_interface_name }}
+interval=60
+{% endif %}
 
 [time]
 command=date '+%Y-%m-%d %H:%M:%S'

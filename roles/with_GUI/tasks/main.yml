@@ -1,4 +1,5 @@
 # with_GUI - install graphics drivers and windows
+# wifi_interface_name - name of the network interfeace to use for status bar (none means no)
 
 #
 # install drivers
@@ -121,8 +122,14 @@
     owner: "{{ item }}"
     group: "{{ item }}"
   loop: "{{ users_to_setup }}"
-
-
+- name: copy wifi script for blocks
+  copy:
+    src: block_wifi
+    dest: "~{{ item }}/.config/i3/block_wifi"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: u+x
+  loop: "{{ users_to_setup }}"
 #
 # setup GUI greeter
 #
