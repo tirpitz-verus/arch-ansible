@@ -29,3 +29,10 @@
       marek:
         email: tirpitz-verus@gmail.com
         fullname: Marek Lesiewski
+
+  tasks:
+
+    - name: install AMD CPU microcode upgreades
+      pacman:
+        name: amd-ucode
+        state: present
