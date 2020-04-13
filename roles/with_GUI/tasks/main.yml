@@ -124,11 +124,17 @@
   loop: "{{ users_to_setup }}"
 - name: copy wifi script for blocks
   copy:
-    src: block_wifi
-    dest: "~{{ item }}/.config/i3/block_wifi"
+    src: net.blocks
+    dest: "~{{ item }}/.config/i3/net.blocks"
     owner: "{{ item }}"
     group: "{{ item }}"
     mode: u+x
+  loop: "{{ users_to_setup }}"
+  # can be removed after some time 
+- name: remove old wifi block file
+  file:
+    path: "~{{ item }}/.config/i3/block_wifi"
+    state: absent
   loop: "{{ users_to_setup }}"
 #
 # setup GUI greeter

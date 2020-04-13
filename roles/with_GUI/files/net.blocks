@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+# directory with network s
+NET_DIR="/sys/class/net"
+
+# set starting values
+SHORT_TEXT=""
+
+first=1
+for dir in $NET_DIR/* ; do
+    name=$(basename $dir)
+
+    # ignore loopback 
+    if [[ "$name" == "lo" ]] ; then
+        continue
+    fi
+    
+    # separater
+    if [[ $first != 1 ]] ; then
+        SHORT_TEXT="$SHORT_TEXT "
+    fi
+    first=0
+    
+    state="$(cat $dir/operstate)"
+    if [[ $state == "down" ]] ; then
+        SHORT_TEXT="$SHORT_TEXT<span foreground=\"red\">$name</span>"
+    else
+        # if its up lets decide on the color
+        if [[ -d $dir/wireless ]] ; then
+            # wifi
+            
+            # ssi
+            ssid=$(iw "$name" info | awk '/ssid/ {print $2}')
+            
+            # quality
+            quality=$(grep $name /proc/net/wireless | awk '{ print int($3 * 100 / 70) }')
+            if [[ $quality -ge 80 ]]; then
+                color="green"
+            elif [[ $quality -ge 60 ]]; then
+                color="yellow"
+            elif [[ $quality -ge 40 ]]; then
+                color="orange"
+            else
+                color="sienna"
+            fi
+            SHORT_TEXT="$SHORT_TEXT<span
+            foreground=\"$color\">$name:$ssid:$quality</span>"
+        else
+            # cable or virtual
+            SHORT_TEXT="$SHORT_TEXT<span foreground=\"green\">$name</span>"
+        fi
+    fi
+done
+
+# print output
+echo $SHORT_TEXT

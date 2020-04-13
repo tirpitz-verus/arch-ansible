@@ -27,7 +27,6 @@
 
   vars:
     with_GUI__is_4k: True
-    wifi_interface_name: wlp4s0
     users_to_setup:
       - root
       - marek

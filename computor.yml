@@ -21,7 +21,6 @@
     - common_software
     
   vars:
-    wifi_interface_name: wlp4s0
     with_GUI__is_4k: False
     users_to_setup:
       - root
