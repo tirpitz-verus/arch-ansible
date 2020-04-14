@@ -68,3 +68,11 @@
       loop:
         - pritunl-client-electron
         - pritunl-client-electron-numix-theme
+    #
+    # install MS Teams
+    #
+    - name: install ms teams
+      aur:
+        name: teams
+        state: present
+      become_user: aur_builder
