@@ -19,6 +19,7 @@
     - developer
     - dropbox
     - common_software
+    - gaming
 
   vars_prompt:
     - name: "my_password"
@@ -44,14 +45,3 @@
       name: intel-ucode
       state: present
 
-  - name: install steam
-    become: yes
-    pacman:
-      name: "{{ item }}"
-      state: present
-    loop:
-      - lib32-gtk2
-      - lib32-libva1
-      - lib32-libva
-      - lib32-libvdpau
-      - steam
