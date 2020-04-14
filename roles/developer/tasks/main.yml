@@ -23,6 +23,7 @@
     - java-openjfx-doc
     - gradle
     - jdk8-openjdk
+    - maven
     # docker
     - docker
     - docker-compose
@@ -39,7 +40,8 @@
     - vulkan-validation-layers
     - vulkan-extra-layers
     - vulkan-trace
-
+    # testing
+    - postamn-bin
 
 #
 # groups
