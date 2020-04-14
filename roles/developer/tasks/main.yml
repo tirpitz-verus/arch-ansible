@@ -40,8 +40,15 @@
     - vulkan-validation-layers
     - vulkan-extra-layers
     - vulkan-trace
+
+- name: install aur dependencies for development
+  become_user: aur_builder
+  aur:
+    name: "{{ item }}"
+    skip_installed: yes 
+  loop:
     # testing
-    - postamn-bin
+    - postman-bin
 
 #
 # groups
