@@ -17,6 +17,7 @@
     - logitech_wireless
     - office
     - common_software
+    - gaming
 
   vars:
     with_GUI__is_4k: True

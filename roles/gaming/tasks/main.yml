@@ -1,0 +1,12 @@
+# gaming - machine is used for playing video games
+
+- name: install steam
+  pacman:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - lib32-gtk2
+    - lib32-libva1
+    - lib32-libva
+    - lib32-libvdpau
+    - steam
