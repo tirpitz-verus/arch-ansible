@@ -10,11 +10,11 @@ first=1
 for dir in $NET_DIR/* ; do
     name=$(basename $dir)
 
-    # ignore loopback 
-    if [[ "$name" == "lo" ]] ; then
+    # ignore virtual interfaaces unless docker or tunnel
+    if [[ ! -d $dir/device ]] && [[ "$name" != "tun0" ]] && [[ "$name" != "docker0" ]] ; then
         continue
     fi
-    
+
     # separater
     if [[ $first != 1 ]] ; then
         SHORT_TEXT="$SHORT_TEXT "
@@ -35,7 +35,7 @@ for dir in $NET_DIR/* ; do
             # quality
             quality=$(grep $name /proc/net/wireless | awk '{ print int($3 * 100 / 70) }')
             if [[ $quality -ge 80 ]]; then
-                color="green"
+                color="lime"
             elif [[ $quality -ge 60 ]]; then
                 color="yellow"
             elif [[ $quality -ge 40 ]]; then
@@ -44,10 +44,10 @@ for dir in $NET_DIR/* ; do
                 color="sienna"
             fi
             SHORT_TEXT="$SHORT_TEXT<span
-            foreground=\"$color\">$name:$ssid:$quality</span>"
+            foreground=\"$color\">$name:$ssid|$quality%</span>"
         else
             # cable or virtual
-            SHORT_TEXT="$SHORT_TEXT<span foreground=\"green\">$name</span>"
+            SHORT_TEXT="$SHORT_TEXT<span foreground=\"lime\">$name</span>"
         fi
     fi
 done
