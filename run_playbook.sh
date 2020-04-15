@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+playbook=$(hostname)
+if [[ ! -z "$1" ]] ; then
+    playbook="$1"
+fi
+
+echo "running playbook $playbook"
+echo ""
+
 echo -n sudo Password: 
 read -sr szPassword
 echo ""
