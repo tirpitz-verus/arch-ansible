@@ -22,4 +22,4 @@ else
   echo "system up to date"
 fi
 
-echo "$szPassword" | sudo -S ansible-playbook -i "$1_inv.yml" "$1.yml" --extra-vars "ansible_become_password=$szPassword"
+echo "$szPassword" | sudo -S ansible-playbook -i "$playbook"_inv.yml "$playbook.yml" --extra-vars "ansible_become_password=$szPassword"
