@@ -87,6 +87,11 @@
 #
 # setup i3
 #
+- name: check if battery present
+  stat: 
+    path: /sys/class/power_supply/BAT0
+  register: battery
+  changed_when: False
 - name: register user templates
   stat:
     path: "{{ role_path }}/templates/{{ item }}_i3config.j2"
@@ -126,6 +131,14 @@
   copy:
     src: net.blocks
     dest: "~{{ item }}/.config/i3/net.blocks"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: u+x
+  loop: "{{ users_to_setup }}"
+- name: copy battery script for blocks
+  copy:
+    src: battery.blocks
+    dest: "~{{ item }}/.config/i3/battery.blocks"
     owner: "{{ item }}"
     group: "{{ item }}"
     mode: u+x
