@@ -19,10 +19,17 @@
     - jre-openjdk
     - jdk-openjdk
     - openjdk-doc
+    - openjdk-src
     - java-openjfx 
     - java-openjfx-doc
+    - java-openjfx-src
     - gradle
+    - jdk11-openjdk
+    - openjdk11-doc
+    - openjdk11-src
     - jdk8-openjdk
+    - openjdk8-doc
+    - openjdk8-src
     - maven
     # docker
     - docker

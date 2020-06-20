@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+# directory with battery
+BAT_DIR="/sys/class/power_supply/BAT0"
+
+# directory with plug
+AC_DIR="/sys/class/power_supply/AC"
+
+# set starting values
+SHORT_TEXT=""
+
+# first lets see if we are plugged
+ac=$(cat $AC_DIR/online)
+if [[ $ac == "1" ]] ; then
+    SHORT_TEXT="$SHORT_TEXT <span foreground=\"lightblue\"></span>"
+else
+    SHORT_TEXT="$SHORT_TEXT <span foreground=\"red\"></span>"
+fi
+
+# and now for the battery
+level=$(cat $BAT_DIR/capacity)
+if [[ $level -ge 80 ]] ; then
+    SHORT_TEXT="$SHORT_TEXT <span foreground=\"green\"></span>"
+elif [[ $level -ge 60 ]] ; then
+    SHORT_TEXT="$SHORT_TEXT <span foreground=\"lime\"></span>"
+elif [[ $level -ge 40 ]] ; then
+    SHORT_TEXT="$SHORT_TEXT <span foreground=\"yellow\"></span>"
+elif [[ $level -ge 20 ]] ; then
+    SHORT_TEXT="$SHORT_TEXT <span foreground=\"orange\"></span>"
+else
+    SHORT_TEXT="$SHORT_TEXT <span foreground=\"red\"></span>"
+fi
+
+# print output
+echo $SHORT_TEXT

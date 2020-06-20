@@ -74,5 +74,84 @@
     - name: install ms teams
       aur:
         name: teams
-        state: present
+        skip_installed: True
       become_user: aur_builder
+
+    #
+    # power management
+    #
+    - name: prevent hibernation on lid close
+      blockinfile:
+        path: /etc/systemd/logind.conf
+        marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
+        block: |
+          HandleLidSwitch=ignore
+          HandleLidSwitchExternalPower=ignore
+          HandleLidSwitchDocked=ignore
+          IdleAction=ignore
+
+    #
+    # configure graphics
+    #
+    - name: enable UXA in intel card
+      copy:
+        dest: /etc/X11/xorg.conf.d/20-intel.conf
+        content: |
+          Section "Device"
+            Identifier "Intel Graphics"
+            Driver "intel"
+            Option "AccelMethod" "uxa"
+            BusID "PCI:0:2:0"
+          EndSection
+    - name: remove xf86-video-nouveau
+      pacman:
+        name: xf86-video-nouveau
+        state: absent
+    - name: install nvidia drivers
+      pacman:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - nvidia
+        #        - bumblebee
+        - bbswitch
+        - xorg-xhost
+    - name: enable nvidia card in xorg
+      copy:
+        dest: /etc/X11/xorg.conf.d/20-nvidia.conf
+        content: |
+          Section "Device"
+            Identifier "Nvidia Graphics"
+            Driver "nvidia"
+            BusID "PCI:1:0:0"
+          EndSection
+    #    - name: add users to group bumblebeed
+    #      user:
+    #        name: "{{ item }}"
+    #        append: True
+    #        groups: bumblebee
+    #      loop: "{{ users_to_setup }}"
+    #    - name: enable bumblebee
+    #      systemd:
+    #        name: bumblebeed
+    #        state: started
+    #        enabled: yes
+    - name: set pacman hook to update initramfs after an NVIDIA driver upgrade
+      copy:
+        dest: /etc/pacman.d/hooks/nvidia.hook
+        content: |
+          [Trigger]
+          Operation=Install
+          Operation=Upgrade
+          Operation=Remove
+          Type=Package
+          Target=nvidia
+          Target=linux
+          # Change the linux part above and in the Exec line if a different kernel is used
+
+          [Action]
+          Description=Update Nvidia module in initcpio
+          Depends=mkinitcpio
+          When=PostTransaction
+          NeedsTargets
+          Exec=/bin/sh -c 'while read -r trg; do case $trg in linux) exit 0; esac; done; /usr/bin/mkinitcpio -P'

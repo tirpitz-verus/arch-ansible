@@ -11,6 +11,13 @@ separator=true
 separator_block_width=15
 SCRIPT_DIR=/home/{{ item }}/.config/i3
 
+{% if battery.stat  %}
+[battery]
+command=$SCRIPT_DIR/battery.blocks
+markup=pango
+interval=300
+{% endif %}
+
 [net]
 command=$SCRIPT_DIR/net.blocks
 markup=pango
