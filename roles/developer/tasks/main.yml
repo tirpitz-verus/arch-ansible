@@ -99,7 +99,7 @@
   block:
     - name: download intellij idea
       get_url:
-        url: https://download.jetbrains.com/idea/ideaIU-2020.1.tar.gz
+        url: https://download.jetbrains.com/idea/ideaIU-2020.2.tar.gz
         dest: /tmp/ideaIU.tar.gz
     - name: create idea dir
       file:
