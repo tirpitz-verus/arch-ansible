@@ -43,8 +43,6 @@
     # scan documents
     - sane
     - skanlite
-    # take screenshots
-    - deepin-screenshot
     # manage e-books
     - calibre
     # learn to type faster
