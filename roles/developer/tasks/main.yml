@@ -56,6 +56,8 @@
   loop:
     # testing
     - postman-bin
+    # IDE
+    - jetbrains-toolbox
 
 #
 # groups
@@ -88,49 +90,16 @@
 
 
 #
-# install Intellij IDEA
+# remove old Intellij installation
 #
-- name: check if idea is installed
-  stat:
-    path: /opt/idea
-  register: idea_dir
-  changed_when: False
-- name: install idea
-  block:
-    - name: download intellij idea
-      get_url:
-        url: https://download.jetbrains.com/idea/ideaIU-2020.2.tar.gz
-        dest: /tmp/ideaIU.tar.gz
-    - name: create idea dir
-      file:
-        path: /opt/idea
-        group: developers
-        owner: root
-        mode: g=rwx
-        state: directory
-    - name: unpack intellij
-      unarchive:
-        src: /tmp/ideaIU.tar.gz
-        dest: /opt/idea
-        group: developers
-        owner: root
-        mode: g=rwx
-  when: idea_dir.stat.exists == False
-- name: idea dir ownership
+- name: remove old Idea dir
   file:
+    state: absent
     path: /opt/idea
-    group: developers
-    owner: root
-    mode: g=rwx
-    recurse: yes
-    state: directory
-- name: create idea start script
-  copy:
-    src: idea.sh
-    dest: ~{{ item.key }}/.local/bin/idea.sh
-    owner: "{{ item.key }}"
-    group: "{{ item.key }}"
-    mode: +x
+- name: remove old Idea start script
+  file:
+    state: absent
+    path: ~{{ item.key }}/.local/bin/idea.sh
   loop: "{{ q('dict', developers) }}"
 
 
