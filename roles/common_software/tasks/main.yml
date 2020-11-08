@@ -56,13 +56,11 @@
 - name: install common software from AUR
   become_user: aur_builder
   aur:
-    name: "{{ item }}"
-    skip_installed: yes
-  loop:
-    # music player
-    - spotify
-    # communicators
-    - slack-desktop
-    - skypeforlinux-stable-bin
-    # personal journal
-    - rednotebook
+    name:
+      # music player
+      - spotify
+      # communicators
+      - slack-desktop
+      - skypeforlinux-stable-bin
+      # personal journal
+      - rednotebook

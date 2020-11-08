@@ -51,14 +51,12 @@
 - name: install aur dependencies for development
   become_user: aur_builder
   aur:
-    name: "{{ item }}"
-    skip_installed: yes 
-  loop:
-    # testing
-    - postman-bin
-    - soapui
-    # IDE
-    - jetbrains-toolbox
+    name:
+      # testing
+      - postman-bin
+      - soapui
+      # IDE
+      - jetbrains-toolbox
 
 #
 # groups
