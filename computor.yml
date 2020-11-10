@@ -50,8 +50,8 @@
           become: yes
           blockinfile:
             path: /etc/pacman.conf
+            marker: "# {mark} ANSIBLE MANAGED BLOCK enable pritunl"
             block: |
-              # enable pritunl
               [pritunl]
               Server = https://repo.pritunl.com/stable/pacman
         - name: download pritunl key
