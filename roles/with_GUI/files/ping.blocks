@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+PING=$(ping -c 1 -q -D 8.8.8.8 | awk 'END{ split($4,a,"/");
+split(a[1],b,"."); print b[1]; }')
+
+if [[ $PING -le 100 ]]; then
+    color="lime"
+elif [[ $PING -le 1000 ]]; then
+    color="yellow"
+elif [[ $PING -le 2000 ]]; then
+    color="orange"
+else
+    color="sienna"
+fi
+
+echo "<span foreground=\"$color\">$PING</span>"
