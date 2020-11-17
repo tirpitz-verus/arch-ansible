@@ -57,6 +57,7 @@
       - soapui
       # IDE
       - jetbrains-toolbox
+    skip_installed: True
 
 #
 # groups
