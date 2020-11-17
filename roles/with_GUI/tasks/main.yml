@@ -143,6 +143,14 @@
     group: "{{ item }}"
     mode: u+x
   loop: "{{ users_to_setup }}"
+- name: copy ping script for blocks
+  copy:
+    src: ping.blocks
+    dest: "~{{ item }}/.config/i3/ping.blocks"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: u+x
+  loop: "{{ users_to_setup }}"
   # can be removed after some time 
 - name: remove old wifi block file
   file:
