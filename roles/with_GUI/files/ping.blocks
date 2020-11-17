@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
-PING=$(ping -c 1 -q -D 8.8.8.8 | awk 'END{ split($4,a,"/");
-split(a[1],b,"."); print b[1]; }')
+PING=$(timeout -k 0 2s ping -c 1 8.8.8.8 | awk 'END{ split($4,a,"/"); split(a[1],b,"."); print b[1]; }' || echo "ERR")
 
-if [[ $PING -le 100 ]]; then
+if [[ $PING -eq "ERR" ]]; then
+    color="red"
+elif [[ $PING -le 100 ]]; then
     color="lime"
 elif [[ $PING -le 1000 ]]; then
     color="yellow"
