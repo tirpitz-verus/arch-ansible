@@ -45,18 +45,14 @@
     check_mode: no
     changed_when: no
     ignore_errors: True
-  - name: enable multilib
-    block:
-      - name: enable multilib repository
-        become: yes
-        blockinfile:
-          path: /etc/pacman.conf
-          marker: "# {mark} ANSIBLE MANAGED BLOCK enable multilib"
-          block: |
-            [multilib]
-            Include = /etc/pacman.d/mirrorlist
-      - name: download pacman repos
-        command: pacman -Sy
+  - name: enable multilib repository
+    blockinfile:
+      path: /etc/pacman.conf
+      marker: "# {mark} ANSIBLE MANAGED BLOCK enable multilib"
+      block: |
+        [multilib]
+        Include = /etc/pacman.d/mirrorlist
+    notify: "download pacman repos"
     when: multilib_present.rc == 1
 
 
@@ -172,17 +168,14 @@
       dest: /etc/ssh/sshd_config
       regexp: '^#PermitRootLogin.*'
       line: PermitRootLogin no
+    notify: "restart sshd"
   - name: prevent ssh password login
     lineinfile:
       state: present
       dest: /etc/ssh/sshd_config
       regexp: '^#PasswordAuthentication yes.*'
       line: PasswordAuthentication no
-  - name: restart sshd
-    systemd:
-      name: sshd
-      enabled: yes
-      state: restarted
+    notify: "restart sshd"
 
  
   - name: set journald size

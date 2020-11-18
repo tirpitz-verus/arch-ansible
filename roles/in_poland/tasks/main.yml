@@ -22,15 +22,21 @@
     dest: /etc/locale.gen
     regexp: en_US.UTF-8 UTF-8
     line: en_US.UTF-8 UTF-8
+  notify: "run locale-gen"
 - name: uncomment pl_pl locale
   lineinfile:
     dest: /etc/locale.gen
     regexp: pl_PL.UTF-8 UTF-8
     line: pl_PL.UTF-8 UTF-8
-- name: run locale-gen
-  shell: locale-gen
+  notify: "run locale-gen"
+- name: register keymap
+  shell: localectl status | grep Keymap | grep pl
+  register: keymap_status
+  changed_when: False
+  ignore_errors: True
 - name: set localectl keymap
   shell: localectl set-keymap pl
+  when: keymap_status.rc != 0
 - name: set locale.conf
   copy:
     dest: /etc/locale.conf

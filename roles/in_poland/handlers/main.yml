@@ -1,0 +1,3 @@
+- name: run locale-gen
+  shell: locale-gen
+  listen: "run locale-gen"

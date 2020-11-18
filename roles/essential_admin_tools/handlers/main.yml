@@ -1,0 +1,10 @@
+- name: download pacman repos
+  command: pacman -Sy
+  listen: "download pacman repos"
+
+- name: restart sshd
+  systemd:
+    name: sshd
+    enabled: yes
+    state: restarted
+  listen: "restart sshd"
