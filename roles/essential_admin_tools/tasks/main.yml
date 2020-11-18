@@ -153,7 +153,7 @@
         Exec = /usr/bin/paccache -rvk2
 
   #
-  # resfresh pacman mirrors automatically
+  # refresh pacman mirrors automatically
   #
   - name: create pacman hook for reflector
     copy:
