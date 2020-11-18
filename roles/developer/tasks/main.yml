@@ -112,18 +112,26 @@
 #
 # install rust
 #
+- name: register if rust installed
+  command: rustup --version
+  register: rustup_version
+  changed_when: False
+  ignore_errors: True
 - name: download Rust install script
   get_url:
     url: https://static.rust-lang.org/rustup.sh
     dest: /tmp/rustup.sh
     mode: +x
+  when: rustup_version.rc != 0
 - name: run Rust install script
   # each user needs to run this script
   become_user: "{{ item.key }}"
   shell: /tmp/rustup.sh -y
   loop: "{{ q('dict', developers) }}"
+  when: rustup_version.rc != 0
 - name: add cargo dir to users PATH
   lineinfile:
     path: ~{{ item.key }}/.profile
-    line: '"PATH=$HOME/.cargo/bin:$PATH"'
+    line: 'PATH=$HOME/.cargo/bin:$PATH'
   loop: "{{ q('dict', developers) }}"
+  when: rustup_version.rc != 0
