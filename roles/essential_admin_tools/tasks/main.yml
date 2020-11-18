@@ -40,7 +40,7 @@
   # add multilib repo
   #
   - name: check if multilib enabled
-    command: grep -Fxq "multilib" /etc/pacman.conf
+    command: grep -Fxq "[multilib]" /etc/pacman.conf
     register: multilib_present
     check_mode: no
     changed_when: no
