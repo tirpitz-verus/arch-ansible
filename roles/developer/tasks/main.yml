@@ -118,6 +118,8 @@
       name = "{{ item.value.fullname }}"
       [core]
       editor=vim
+      [pull]
+      ff=only
   loop: "{{ q('dict', developers) }}"
 
 
