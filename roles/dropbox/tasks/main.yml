@@ -20,7 +20,6 @@
       become_user: aur_builder
       aur:
         name: dropbox
-        skip_installed: True
     - name: create user dropbox service directory
       file:
         path: "~{{ item }}/.config/systemd/user/dropbox.service.d/" 

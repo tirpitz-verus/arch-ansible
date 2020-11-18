@@ -74,7 +74,6 @@
     - name: install ms teams
       aur:
         name: teams
-        skip_installed: True
       become_user: aur_builder
 
     #

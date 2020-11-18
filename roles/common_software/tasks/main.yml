@@ -64,4 +64,3 @@
       - skypeforlinux-stable-bin
       # personal journal
       - rednotebook
-    skip_installed: True

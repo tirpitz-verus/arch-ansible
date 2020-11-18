@@ -235,3 +235,9 @@
       dest: '~{{ item }}/.profile'
       mode: 'u=rw,go=r'
     loop: "{{ users_to_setup }}"
+
+  - name: force ansible-aur-git update
+    become_user: aur_builder
+    aur:
+      name: ansible-aur-git
+      state: latest
