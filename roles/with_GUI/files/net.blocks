@@ -21,17 +21,32 @@ for dir in $NET_DIR/* ; do
     fi
     first=0
     
+    # description
+    descr=$name
+    if [[ $name == d* ]]; then
+        descr=""
+    fi
+    if [[ $name == t* ]]; then
+        descr=""
+    fi
+    if [[ $name == e* ]]; then
+        descr=""
+    fi
+    if [[ $name == w* ]]; then
+        descr=""
+    fi
+
     state="$(cat $dir/operstate)"
     if [[ $state == "down" ]] ; then
-        SHORT_TEXT="$SHORT_TEXT<span foreground=\"red\">$name</span>"
+        SHORT_TEXT="$SHORT_TEXT<span foreground=\"red\">$descr</span>"
     else
         # if its up lets decide on the color
         if [[ -d $dir/wireless ]] ; then
             # wifi
-            
+
             # ssi
             ssid=$(iw "$name" info | awk '/ssid/ {print $2}')
-            
+
             # quality
             quality=$(grep $name /proc/net/wireless | awk '{ print int($3 * 100 / 70) }')
             if [[ $quality -ge 80 ]]; then
@@ -44,10 +59,10 @@ for dir in $NET_DIR/* ; do
                 color="sienna"
             fi
             SHORT_TEXT="$SHORT_TEXT<span
-            foreground=\"$color\">$name:$ssid|$quality%</span>"
+            foreground=\"$color\">$descr:$ssid:$quality%</span>"
         else
             # cable or virtual
-            SHORT_TEXT="$SHORT_TEXT<span foreground=\"lime\">$name</span>"
+            SHORT_TEXT="$SHORT_TEXT<span foreground=\"lime\">$descr</span>"
         fi
     fi
 done
