@@ -34,12 +34,6 @@
       - zsh-completions
       # for zsh
       - python-pexpect
-  - name: remove unwanted programs
-    pacman:
-      name: "{{ item }}"
-      state: absent
-    loop:
-      - lynx
 
 
   #
