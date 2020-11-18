@@ -58,6 +58,7 @@
       # IDE
       - jetbrains-toolbox
 
+
 #
 # groups
 #
@@ -86,20 +87,6 @@
     name: docker
     state: started
     enabled: yes
-
-
-#
-# remove old Intellij installation
-#
-- name: remove old Idea dir
-  file:
-    state: absent
-    path: /opt/idea
-- name: remove old Idea start script
-  file:
-    state: absent
-    path: ~{{ item.key }}/.local/bin/idea.sh
-  loop: "{{ q('dict', developers) }}"
 
 
 #
