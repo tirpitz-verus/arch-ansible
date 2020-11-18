@@ -135,3 +135,30 @@
     line: 'PATH=$HOME/.cargo/bin:$PATH'
   loop: "{{ q('dict', developers) }}"
   when: rustup_version.rc != 0
+
+
+#
+# create directory structure
+#
+- name: create directory for projects
+  file:
+    path: ~{{ item.key }}/Projects
+    state: directory
+    owner: "{{ item.key }}"
+    group: "{{ item.key }}"
+  loop: "{{ q('dict', developers) }}"
+- name: create directory for project builds
+  file:
+    path: ~{{ item.key }}/Project_builds
+    state: directory
+    owner: "{{ item.key }}"
+    group: "{{ item.key }}"
+  loop: "{{ q('dict', developers) }}"
+- name: create Projects_builds linking script
+  copy:
+    src: link_to_Projects_builds.sh
+    dest: ~{{ item.key }}/.local/bin/link_to_Projects_builds.sh
+    owner: "{{ item.key }}"
+    group: "{{ item.key }}"
+    mode: +x
+  loop: "{{ q('dict', developers) }}"
