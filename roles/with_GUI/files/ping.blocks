@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
+# get ping value
 PING=$(timeout -k 0 2s ping -c 1 8.8.8.8 | awk 'END{ split($4,a,"/"); split(a[1],b,"."); print b[1]; }' || echo "ERR")
 
+# choose color
 if [[ $PING -eq "ERR" ]]; then
     color="red"
 elif [[ $PING -le 100 ]]; then
@@ -14,4 +16,11 @@ else
     color="sienna"
 fi
 
-echo "<span foreground=\"$color\">$PING</span>"
+# padding ping value
+descr=$PING
+while [[ ${#descr} -lt 5 ]]; do
+    descr="0$descr"
+    #echo $descr
+done
+
+echo "<span foreground=\"$color\"> $descr</span>"
