@@ -156,9 +156,15 @@
   loop: "{{ q('dict', developers) }}"
 - name: create Projects_builds linking script
   copy:
-    src: link_to_Projects_builds.sh
-    dest: ~{{ item.key }}/.local/bin/link_to_Projects_builds.sh
+    src: link_to_Project_builds.sh
+    dest: ~{{ item.key }}/.local/bin/link_to_Project_builds
     owner: "{{ item.key }}"
     group: "{{ item.key }}"
     mode: +x
   loop: "{{ q('dict', developers) }}"
+- name: remove old link_to_Projects_builds.sh file
+  file:
+    path: ~{{ item.key }}/.local/bin/link_to_Projects_builds.sh
+    state: absent
+  loop: "{{ q('dict', developers) }}"
+

@@ -215,12 +215,13 @@
       dest: '~{{ item }}/.zshrc'
       mode: 'u=rw,go=r'
     loop: "{{ users_to_setup }}"
-  - name: write .profile for users
+  - name: make sure .profile for users adds .local/bin to PATH
     become_user: '{{ item }}'
-    template:
-      src: profile.j2
-      dest: '~{{ item }}/.profile'
+    lineinfile:
+      path: ~{{ item }}/.profile
+      line: 'PATH=$HOME/.local/bin:$PATH'
       mode: 'u=rw,go=r'
+      create: yes
     loop: "{{ users_to_setup }}"
 
   - name: force ansible-aur-git update
