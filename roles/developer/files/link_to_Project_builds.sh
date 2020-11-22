@@ -10,8 +10,9 @@ parent_for_build_dirs="$HOME/Project_builds$project_path"
 # target - maven and rustc
 # out - Intellij Idea
 # dist - JS projects
-# build - I cant remember
-build_dirs=(target out dist build)
+# build - gradle and JS project
+# node_modules - node.js modules
+build_dirs=(target out dist build node_modules)
 
 # for each build_dir
 for build_dir in "${build_dirs[@]}"; do
