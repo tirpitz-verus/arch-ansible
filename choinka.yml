@@ -8,9 +8,9 @@
     - essential_admin_tools
     - with_network_cable
     - in_poland
-    - with_hostname 
+    - with_hostname
     - with_sound
-    - with_SSD 
+    - with_SSD
     - with_GUI
     - developer
     - dropbox
@@ -26,10 +26,8 @@
       - marek
     dropbox_users:
       - marek
-    developers:
-      marek:
-        email: tirpitz-verus@gmail.com
-        fullname: Marek Lesiewski
+    developers: "{{ vault_developers }}"
+    wegiel_ip: "{{ vault_wegiel_ip }}"
 
   tasks:
 
@@ -37,3 +35,17 @@
       pacman:
         name: amd-ucode
         state: present
+    #
+    # prepare backup to wegiel
+    #
+    - name: install rsync
+      pacman:
+        name: rsync
+        state: present
+    - name: create backup script
+      template:
+        src: choinka_backup_to_wegiel.sh
+        dest: ~marek/.local/bin/backup_to_wegiel
+        mode: 'u=rwx,go=r'
+        owner: marek
+        group: marek

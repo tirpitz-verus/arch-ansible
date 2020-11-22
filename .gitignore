@@ -2,3 +2,5 @@
 
 *.iml
 .idea
+
+.vault_pass

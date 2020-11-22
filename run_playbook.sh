@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 playbook=$(hostname)
-if [[ ! -z "$1" ]] ; then
+if [[ -n "$1" ]] ; then
     playbook="$1"
 fi
 
@@ -12,9 +12,8 @@ echo -n sudo Password:
 read -sr szPassword
 echo ""
 
-if echo "$szPassword" | sudo -S pacman -Syup | grep -q 'https';
-then
-  echo "!! system needs an upgreade"
+if echo "$szPassword" | sudo -S pacman -Syup | grep -q 'https'; then
+  echo "ERROR: system needs an upgreade"
   echo "please run:"
   echo "  sudo pacmatic -Syu && yay -Syu"
   exit 1
@@ -22,4 +21,11 @@ else
   echo "system up to date"
 fi
 
-echo "$szPassword" | sudo -S ansible-playbook -i "$playbook"_inv.yml "$playbook.yml" --extra-vars "ansible_become_password=$szPassword"
+valut_var_file="$playbook"_inv_v.yml
+if [ -f "$valut_var_file" ]; then
+  ./validate_vault_pass_file.sh || exit 1
+  echo "using vault extra var file"
+  echo "$szPassword" | sudo -S ansible-playbook -i "$playbook"_inv.yml "$playbook.yml" --extra-vars "ansible_become_password=$szPassword" --extra-vars @"$valut_var_file" --vault-password-file .vault_pass
+else
+  echo "$szPassword" | sudo -S ansible-playbook -i "$playbook"_inv.yml "$playbook.yml" --extra-vars "ansible_become_password=$szPassword"
+fi

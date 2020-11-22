@@ -3,4 +3,3 @@ all:
     choinka:
   vars:      
     ansible_connection: local
-
