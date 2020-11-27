@@ -49,6 +49,8 @@
     - klavaro
     # required by rednotebook (from AUR)
     - binutils
+    # firewall
+    - firewalld
 
 #
 # install from AUR
@@ -64,3 +66,12 @@
       - skypeforlinux-stable-bin
       # personal journal
       - rednotebook
+
+
+#
+# start firewall
+#
+- name: start firewalld
+  systemd:
+    name: firewalld.service
+    state: started
