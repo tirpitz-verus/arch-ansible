@@ -25,7 +25,7 @@ markup=pango
 interval=once
 signal=11
 
-{% if battery.stat  %}
+{% if battery.stat.exists  %}
 [battery]
 command=$SCRIPT_DIR/battery.blocks
 markup=pango
