@@ -159,12 +159,8 @@
     group: "{{ item }}"
     mode: u+x
   loop: "{{ users_to_setup }}"
-  # can be removed after some time 
-- name: remove old wifi block file
-  file:
-    path: "~{{ item }}/.config/i3/block_wifi"
-    state: absent
-  loop: "{{ users_to_setup }}"
+
+
 #
 # setup GUI greeter
 #
