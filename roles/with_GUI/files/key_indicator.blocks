@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+# if not set that "Caps"
+key=${KEY_INDICATOR:="Caps"}
+
+# check if the key is pressed
+status=$(xset -q | egrep -c "$key Lock:\s+on")
+
+# set color based on status
+if [[ $status -eq 0 ]]; then
+    color="gray"
+else
+    color="lime"
+fi
+
+# return result
+echo "<span foreground=\"$color\">$key</span>"

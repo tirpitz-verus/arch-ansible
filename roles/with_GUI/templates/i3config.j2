@@ -202,3 +202,7 @@ bar {
 # 15 is the plugdev device id
 exec_always xinput --set-prop 15 'libinput Accel Speed' 1
 {% endif %}
+
+# for key indicators in i3blocks
+bindsym --release Caps_Lock exec pkill -SIGRTMIN+11 i3blocks
+bindsym --release Num_Lock  exec pkill -SIGRTMIN+11 i3blocks

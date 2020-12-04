@@ -151,6 +151,14 @@
     group: "{{ item }}"
     mode: u+x
   loop: "{{ users_to_setup }}"
+- name: copy key_indicator script for blocks
+  copy:
+    src: key_indicator.blocks
+    dest: "~{{ item }}/.config/i3/key_indicator.blocks"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: u+x
+  loop: "{{ users_to_setup }}"
   # can be removed after some time 
 - name: remove old wifi block file
   file:
