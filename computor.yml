@@ -42,8 +42,6 @@
       register: pritunl_present
       changed_when: False
       ignore_errors: True
-    - debug:
-        var: pritunl_present
     - name: enable pritunl repository
       block:
         - name: add pritunl repository
