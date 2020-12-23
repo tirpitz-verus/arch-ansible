@@ -52,9 +52,6 @@
     - feh
     - dmenu
     - xorg-xinit
-    #- powerline - ansible failed here
-    - powerline-fonts
-    #- powerline-vim - ansible failed here
     - ttf-dejavu
     #- ttf-freefont - ansible failed here
     - otf-font-awesome

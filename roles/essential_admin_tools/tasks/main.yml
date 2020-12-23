@@ -98,9 +98,26 @@
   #
   # stuff for vim
   #
-  - name: install powerline
+  - name: install powerline status
     pip:
       name: powerline-status
+      state: absent
+  - name: install powerline
+    pacman:
+      name: "{{ item }}"
+      state: absent
+    loop:
+      - powerline
+      - powerline-vim
+  - name: install vim-airline
+    pacman:
+      name: "{{ item }}"
+      state: present
+    loop:
+      - vim-airline
+      - vim-airline-themes
+      - powerline-fonts
+      # https://archlinux.org/groups/x86_64/vim-plugins/
   - name: copy .vimrc for non-root
     copy:
       src: .vimrc
