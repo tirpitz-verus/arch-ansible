@@ -53,9 +53,7 @@
     - dmenu
     - xorg-xinit
     - ttf-dejavu
-    #- ttf-freefont - ansible failed here
     - otf-font-awesome
-    # greeter - graphical login screen
     - xdm-archlinux
 
 #
