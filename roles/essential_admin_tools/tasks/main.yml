@@ -5,6 +5,8 @@
     loop:
       - wget
       - vim
+      - vim-spell-en
+      - vim-spell-pl
       - python-pip
       - ansible
       - git
@@ -98,11 +100,11 @@
   #
   # stuff for vim
   #
-  - name: install powerline status
+  - name: remove powerline status
     pip:
       name: powerline-status
       state: absent
-  - name: install powerline
+  - name: remove powerline
     pacman:
       name: "{{ item }}"
       state: absent
@@ -241,6 +243,7 @@
       create: yes
     loop: "{{ users_to_setup }}"
 
+# 2021-01-25 seems this doesn't work - not sure why? yay writes something to stderr but the text doesn't seem to contain any error msg
   - name: force ansible-aur-git update
     become_user: aur_builder
     aur:

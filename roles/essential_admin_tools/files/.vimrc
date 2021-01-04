@@ -1,3 +1,6 @@
+" Set vim-airline style
+let g:airline_theme='molokai'
+
 " Indentation & Tabs
 set autoindent
 set smartindent
@@ -24,7 +27,7 @@ set scrolloff=5
 set laststatus=2
 
 " Spell
-" set spell spelllang=en_us
+set spelllang=en,pl
 
 " Miscellaneous
 set autochdir
