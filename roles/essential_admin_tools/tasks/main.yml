@@ -244,8 +244,8 @@
     loop: "{{ users_to_setup }}"
 
 # 2021-01-25 seems this doesn't work - not sure why? yay writes something to stderr but the text doesn't seem to contain any error msg
-  - name: force ansible-aur-git update
-    become_user: aur_builder
-    aur:
-      name: ansible-aur-git
-      state: latest
+#  - name: force ansible-aur-git update
+#    become_user: aur_builder
+#    aur:
+#      name: ansible-aur-git
+#      state: latest
