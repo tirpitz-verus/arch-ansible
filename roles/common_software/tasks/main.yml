@@ -77,3 +77,4 @@
   systemd:
     name: firewalld.service
     state: started
+    enabled: yes
