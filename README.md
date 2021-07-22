@@ -1,2 +1,2 @@
 # arch-ansible
-personal playbooks for setting up arch instalations
+personal playbooks for setting up arch installations
