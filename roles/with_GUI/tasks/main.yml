@@ -175,16 +175,15 @@
   loop: "{{ users_to_setup }}"
   when: with_GUI__dualscreen is defined
 
+
+
 - name: add dual screen script
   template:
-    src: dualscreen.sh
+    src: dualscreen.sh.j2
     dest: "~{{ item }}/.screenlayout/dualscreen.sh"
     mode: u=xr
     owner: "{{ item }}"
     group: "{{ item }}"
-  vars:
-    left_screen_name: with_GUI__dualscreen.left
-    right_screen_name: with_GUI__dualscreen.right
   loop: "{{ users_to_setup }}"
   when: with_GUI__dualscreen is defined
 
