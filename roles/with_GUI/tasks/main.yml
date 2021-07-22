@@ -179,7 +179,7 @@
   template:
     src: dualscreen.sh
     dest: "~{{ item }}/.screenlayout/dualscreen.sh"
-    mode: u=x
+    mode: u=xr
     owner: "{{ item }}"
     group: "{{ item }}"
   vars:
