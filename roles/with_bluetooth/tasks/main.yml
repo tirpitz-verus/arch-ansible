@@ -1,6 +1,15 @@
 # with_bluetooth - installs bluez
 
-  - name: install bluetooth software
-    pacman:
-      name: bluez-utils
-      state: present
+- name: install bluetooth software
+  pacman:
+    name: bluez-utils
+    state: present
+
+
+- name: create bluetooth script
+  become_user: '{{ item }}'
+  copy:
+    src: bluetooth_on.sh
+    dest: ~{{ item }}/.local/bin/bluetooth_on.sh
+    mode: +x
+  loop: "{{ users_to_setup }}"
