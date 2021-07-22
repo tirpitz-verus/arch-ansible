@@ -24,8 +24,8 @@
   vars:
     with_GUI__is_4k: False
     with_GUI__dualscreen:
-      right: eDP1
-      left: DP-1-1
+      right: DP-1-1
+      left: eDP1
     users_to_setup:
       - root
       - marek
