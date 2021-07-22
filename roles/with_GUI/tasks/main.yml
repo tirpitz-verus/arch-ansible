@@ -165,4 +165,27 @@
     enabled: yes
     state: started
 
+#
+# add dual screen script
+#
+- name: create script dir
+  file:
+    path: "~{{ item }}/.screenlayout"
+    state: directory
+  loop: "{{ users_to_setup }}"
+  when: with_GUI__dualscreen is defined
+
+- name: add dual screen script
+  template:
+    src: dualscreen.sh
+    dest: "~{{ item }}/.screenlayout/dualscreen.sh"
+    mode: u=x
+    owner: "{{ item }}"
+    group: "{{ item }}"
+  vars:
+    left_screen_name: with_GUI__dualscreen.left
+    right_screen_name: with_GUI__dualscreen.right
+  loop: "{{ users_to_setup }}"
+  when: with_GUI__dualscreen is defined
+
 
