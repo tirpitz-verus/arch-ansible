@@ -5,8 +5,16 @@
     force: true
     state: link
 
+- name: check if adjtime exists
+  stat:
+    path: /etc/adjtime
+  register: adjtime_exists
+  ignore_errors: True
+  changed_when: False
+
 - name: generate adjtime
   command: hwclock --systohc
+  when: adjtime_exists.stat.exists == False
 
 - name: create vconsole.conf with PL
   copy:
