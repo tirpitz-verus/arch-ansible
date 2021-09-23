@@ -11,6 +11,7 @@ echo ""
 echo -n sudo Password: 
 read -sr szPassword
 echo ""
+echo ""
 
 if echo "$szPassword" | sudo -S pacman -Syup | grep -q 'https'; then
   echo "ERROR: system needs an upgrade"
