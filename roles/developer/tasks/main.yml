@@ -168,3 +168,32 @@
     state: absent
   loop: "{{ q('dict', developers) }}"
 
+#
+# setup ssh agent
+#
+- name: copy ssh config file
+  copy:
+    src: ssh_config
+    dest: ~{{ item.key }}/.ssh/config
+    mode: '600'
+    owner: "{{ item.key }}"
+    group: "{{ item.key }}"
+  loop: "{{ q('dict', developers) }}"
+- name: copy ssh-agent systemd service
+  copy:
+    src: ssh-agent.service
+    dest: ~{{ item.key }}/.config/systemd/user/ssh-agent.service
+  loop: "{{ q('dict', developers) }}"
+- name: add ssh-agent socket to users PATH
+  lineinfile:
+    path: ~{{ item.key }}/.zshrc
+    line: 'export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"'
+  loop: "{{ q('dict', developers) }}"
+- name: start ssh agent service
+  become_user: "{{ item.key }}"
+  systemd:
+    name: ssh-agent.service
+    state: started
+    enabled: yes
+    scope: user
+  loop: "{{ q('dict', developers) }}"

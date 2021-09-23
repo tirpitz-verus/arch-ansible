@@ -1,0 +1,7 @@
+AddKeysToAgent yes
+
+Host *
+  4     IdentitiesOnly yes
+  5     IdentityFile ~/.ssh/id_rsa
+  6     HostkeyAlgorithms +ssh-rsa
+  7     PubkeyAcceptedAlgorithms +ssh-rsa
