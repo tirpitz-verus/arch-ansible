@@ -30,7 +30,9 @@
     wegiel_ip: "{{ vault_wegiel_ip }}"
 
   tasks:
-
+    #
+    # install CPU microcode upgreade
+    #
     - name: install AMD CPU microcode upgreades
       pacman:
         name: amd-ucode
@@ -49,3 +51,35 @@
         mode: 'u=rwx,go=r'
         owner: marek
         group: marek
+    #
+    # guitar stuff
+    #
+    - name: install guitar software
+      pacman:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - jack2
+        - jack2-dbus
+        - qjackctl
+        - guitarix
+        - realtime-privileges
+        - pulseaudio-jack
+        - ardour
+    - name: install aur guitar software
+      aur:
+        name: "{ item }"
+      become_user: aur_builder
+      loop:
+        - gtick
+    - name: add user to realtime group
+      user:
+        name: marek
+        groups: realtime
+        append: yes
+    - name: run qjackctl with i3
+      blockinfile:
+        path: /home/marek/.config/i3/config
+        block: |
+          exec qjackctl
+        marker: "# {mark} ANSIBLE MANAGED BLOCK enable run qjackctl"
