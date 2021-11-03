@@ -32,3 +32,12 @@ set spelllang=en,pl
 " Miscellaneous
 set autochdir
 set undofile
+
+" enable find menu completition
+set wildmenu
+
+" add subfolders and files to path
+path+=**
+
+" ignore some known big folders from path
+wildignore+=**/node_modules/**
