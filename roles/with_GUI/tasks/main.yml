@@ -174,9 +174,6 @@
     state: directory
   loop: "{{ users_to_setup }}"
   when: with_GUI__dualscreen is defined
-
-
-
 - name: add dual screen script
   template:
     src: dualscreen.sh.j2

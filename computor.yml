@@ -24,8 +24,8 @@
   vars:
     with_GUI__is_4k: False
     with_GUI__dualscreen:
-      right: DP-1-1
-      left: eDP1
+      right: DP-1
+      left: eDP-1-1
     users_to_setup:
       - root
       - marek
@@ -93,49 +93,32 @@
     #
     # configure graphics
     #
-    - name: enable UXA in intel card
-      copy:
-        dest: /etc/X11/xorg.conf.d/20-intel.conf
-        content: |
-          Section "Device"
-            Identifier "Intel Graphics"
-            Driver "intel"
-            Option "AccelMethod" "uxa"
-            BusID "PCI:0:2:0"
-          EndSection
-    - name: remove xf86-video-nouveau
-      pacman:
-        name: xf86-video-nouveau
-        state: absent
     - name: install nvidia drivers
       pacman:
         name: "{{ item }}"
         state: present
       loop:
         - nvidia
-        #        - bumblebee
-        - bbswitch
         - xorg-xhost
-    - name: enable nvidia card in xorg
+    - name: nvidia only x-org setup
       copy:
-        dest: /etc/X11/xorg.conf.d/20-nvidia.conf
+        dest: /etc/X11/xorg.conf.d/10-nvidia-drm-outputclass.conf
         content: |
-          Section "Device"
-            Identifier "Nvidia Graphics"
-            Driver "nvidia"
-            BusID "PCI:1:0:0"
+          Section "OutputClass"
+             Identifier "intel"
+             MatchDriver "i915"
+             Driver "modesetting"
           EndSection
-    #    - name: add users to group bumblebeed
-    #      user:
-    #        name: "{{ item }}"
-    #        append: True
-    #        groups: bumblebee
-    #      loop: "{{ users_to_setup }}"
-    #    - name: enable bumblebee
-    #      systemd:
-    #        name: bumblebeed
-    #        state: started
-    #        enabled: yes
+
+          Section "OutputClass"
+            Identifier "nvidia"
+            MatchDriver "nvidia-drm"
+            Driver "nvidia"
+            Option "AllowEmptyInitialConfiguration"
+            Option "PrimaryGPU" "yes"
+           ModulePath "/usr/lib/nvidia/xorg"
+           ModulePath "/usr/lib/xorg/modules"
+          EndSection
     - name: set pacman hook to update initramfs after an NVIDIA driver upgrade
       copy:
         dest: /etc/pacman.d/hooks/nvidia.hook
@@ -155,3 +138,18 @@
           When=PostTransaction
           NeedsTargets
           Exec=/bin/sh -c 'while read -r trg; do case $trg in linux) exit 0; esac; done; /usr/bin/mkinitcpio -P'
+    - name: set xrandr settigs for XDM
+      blockinfile:
+        path: /etc/X11/xdm/archlinux/Xsetup
+        marker: "# {mark} ANSIBLE MANAGED BLOCK enable xrandr settings"
+        block: |
+          xrandr --auto
+    - name: set screen config for two screens
+      blockinfile:
+        path: /home/marek/.xinitrc
+        marker: "# {mark} ANSIBLE MANAGED BLOCK set screen config for two screens"
+        insertbefore: "^exec i3"
+        block: |
+          xrandr --setprovideroutputsource modesetting NVIDIA-0
+          xrandr --output DP-0 --off --output DP-1 --mode 1920x1080 --pos 1920x0 --rotate normal --output DP-2 --off --output DP-3 --off --output DP-4 --off --output DP-5 --off --output eDP-1-1 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output DP-1-1 --off --output HDMI-1-1 --off --output DP-1-2 --off
+          xrandr --dpi 96
