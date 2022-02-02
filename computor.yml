@@ -4,22 +4,22 @@
   become: yes
   gather_facts: False
   roles:
-    - accounts_setup
-    - essential_admin_tools
-    - with_network_cable
-    - in_poland
-    - with_hostname
-    - with_bluetooth
-    - with_battery
-    - with_sound
-    - with_SSD
-    - with_wifi
-    - with_swapfile
-    - with_GUI
-    - developer
-    - dropbox
-    - common_software
-    - office
+#    - accounts_setup
+#    - essential_admin_tools
+#    - with_network_cable
+#    - in_poland
+#    - with_hostname
+#    - with_bluetooth
+#    - with_battery
+#    - with_sound
+#    - with_SSD
+#    - with_wifi
+#    - with_swapfile
+#    - with_GUI
+#    - developer
+#    - dropbox
+#    - common_software
+#    - office
 
   vars:
     with_GUI__is_4k: False
@@ -89,6 +89,30 @@
           HandleLidSwitchExternalPower=ignore
           HandleLidSwitchDocked=ignore
           IdleAction=ignore
+    - name: switch on bluetooth by default in TLP
+      blockinfile:
+        create: yes
+        path: /etc/tlp.d/01-bluetooth-on-ac.conf
+        block:
+          DEVICES_TO_ENABLE_ON_AC="bluetooth"
+    - name: set bluetooth policy to auto-enabled
+      lineinfile:
+        regexp: "^#AutoEnable=false$"
+        state: present
+        path: /etc/bluetooth/main.conf
+        line: AutoEnable=true
+    - name: set bluetooth policy to fast-connectable
+      lineinfile:
+        regexp: "^#FastConnectable=false$"
+        state: present
+        path: /etc/bluetooth/main.conf
+        line: FastConnectable=true
+    - name: enable bluetoothd
+      systemd:
+        name: bluetooth.service
+        state: started
+        enabled: yes
+
 
     #
     # configure graphics
