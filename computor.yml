@@ -4,22 +4,22 @@
   become: yes
   gather_facts: False
   roles:
-#    - accounts_setup
-#    - essential_admin_tools
-#    - with_network_cable
-#    - in_poland
-#    - with_hostname
-#    - with_bluetooth
-#    - with_battery
-#    - with_sound
-#    - with_SSD
-#    - with_wifi
-#    - with_swapfile
-#    - with_GUI
-#    - developer
-#    - dropbox
-#    - common_software
-#    - office
+    - accounts_setup
+    - essential_admin_tools
+    - with_network_cable
+    - in_poland
+    - with_hostname
+    - with_bluetooth
+    - with_battery
+    - with_sound
+    - with_SSD
+    - with_wifi
+    - with_swapfile
+    - with_GUI
+    - developer
+    - dropbox
+    - common_software
+    - office
 
   vars:
     with_GUI__is_4k: False
