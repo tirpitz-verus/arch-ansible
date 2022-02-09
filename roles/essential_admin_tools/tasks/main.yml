@@ -69,7 +69,7 @@
     lineinfile:
       dest: /etc/sudoers
       state: present
-      line: '%wheel ALL=(ALL) ALL'
+      line: '%wheel ALL=(ALL:ALL) ALL'
       validate: 'visudo -cf %s'
 
 
@@ -82,8 +82,9 @@
     lineinfile:
       dest: /etc/sudoers
       state: present
-      line: '%systemupdater ALL=(ALL) NOPASSWD: /usr/bin/pacmatic'
+      line: '%systemupdater ALL=(ALL:ALL) NOPASSWD: /usr/bin/pacmatic'
       validate: 'visudo -cf %s'
+
 
   #
   # add users to groups and set shell

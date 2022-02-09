@@ -83,3 +83,7 @@
         block: |
           exec qjackctl
         marker: "# {mark} ANSIBLE MANAGED BLOCK enable run qjackctl"
+
+    # cleanup
+    - name: include cleanup tasks
+      include_tasks: clean_up.yaml
