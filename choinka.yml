@@ -7,11 +7,11 @@
     - accounts_setup
     - essential_admin_tools
     - with_network_cable
+    - with_GUI
     - in_poland
     - with_hostname
     - with_sound
     - with_SSD
-    - with_GUI
     - developer
     - dropbox
     - logitech_wireless

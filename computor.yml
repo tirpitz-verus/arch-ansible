@@ -7,6 +7,7 @@
     - accounts_setup
     - essential_admin_tools
     - with_network_cable
+    - with_GUI
     - in_poland
     - with_hostname
     - with_bluetooth
@@ -15,7 +16,6 @@
     - with_SSD
     - with_wifi
     - with_swapfile
-    - with_GUI
     - developer
     - dropbox
     - common_software

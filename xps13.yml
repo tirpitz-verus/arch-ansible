@@ -6,15 +6,15 @@
   roles:
     - accounts_setup
     - essential_admin_tools      
-    - in_poland
-    - with_hostname  
-    - with_bluetooth
-    - with_battery  
-    - with_sound
-    - with_SSD  
-    - with_wifi
-    - with_swapfile 
     - with_GUI
+    - in_poland
+    - with_hostname
+    - with_bluetooth
+    - with_battery
+    - with_sound
+    - with_SSD
+    - with_wifi
+    - with_swapfile
     - office
     - developer
     - dropbox
