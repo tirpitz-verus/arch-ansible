@@ -1,5 +1,14 @@
 # with_network_cable - enable automatic cable network
-- name: enable dhcpcd
+name: install network software
+  pacman:
+    name: "{{ item }}"
+    state: present
+  loop:
+    # network manager
+    - netctl
+    # DHCP client
+    - dhcpcd
+- name: enable dhcp client
   systemd:
     name: dhcpcd
     state: started
