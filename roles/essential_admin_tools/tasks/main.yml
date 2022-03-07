@@ -101,17 +101,6 @@
   #
   # stuff for vim
   #
-  - name: remove powerline status
-    pip:
-      name: powerline-status
-      state: absent
-  - name: remove powerline
-    pacman:
-      name: "{{ item }}"
-      state: absent
-    loop:
-      - powerline
-      - powerline-vim
   - name: install vim-airline
     pacman:
       name: "{{ item }}"
