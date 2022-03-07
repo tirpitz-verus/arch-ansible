@@ -42,11 +42,7 @@
     - cmake
     - gcc
     # Vulkan
-    - vulkan-headers
-    - vulkan-tools
-    - vulkan-validation-layers
-    - vulkan-extra-layers
-    - vulkan-trace
+    - vulkan-devel
 
 - name: install aur dependencies for development
   become_user: aur_builder
