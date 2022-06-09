@@ -16,7 +16,7 @@
         dest: /tmp/dropbox-public-key.asc
     - name: import dropbox signature
       command: gpg --import /tmp/dropbox-public-key.asc
-    - name: install dropbox
+    - name: install dropbox from aur
       become_user: aur_builder
       aur:
         name: dropbox
@@ -51,7 +51,7 @@
         state: started
         scope: user
         enabled: yes
-        # need to reload just after instalation
+        # need to reload just after installation
         daemon_reload: yes
       loop: "{{ dropbox_users }}"
   when: dropbox_is_installed.rc != 0
