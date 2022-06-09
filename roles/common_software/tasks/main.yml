@@ -45,8 +45,6 @@
     - skanlite
     # manage e-books
     - calibre
-    # learn to type faster
-    - klavaro
     # required by rednotebook (from AUR)
     - binutils
     # firewall

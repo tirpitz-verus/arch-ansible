@@ -1,7 +1,5 @@
 # list of general cleanup tasks
 
-
-
 # 2022-02-09 cleanup after an update adding :ALL in visudo
 - name: 2022-02-09 remove old entry
   lineinfile:
@@ -27,3 +25,8 @@
     state: absent
     line: '%wifi ALL=(ALL) NOPASSWD: /bin/netctl'
     validate: 'visudo -cf %s'
+
+- name: 2022-06-09 remove klavaro
+  pacman:
+    name: klavaro
+    state: absent
