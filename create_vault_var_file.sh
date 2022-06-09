@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-playbook=$(hostname)
+playbook=$(hostnamectl hostname)
 if [[ -n "$1" ]] ; then
     playbook="$1"
 fi
