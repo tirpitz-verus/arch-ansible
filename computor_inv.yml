@@ -1,5 +1,0 @@
-all:
-  hosts:
-    computor:
-  vars:
-    ansible_connection: local
