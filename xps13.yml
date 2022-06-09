@@ -1,5 +1,6 @@
 ---
 - hosts: xps13
+  connection: local
   become_user: root
   become: yes
   gather_facts: False

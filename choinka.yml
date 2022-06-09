@@ -1,5 +1,6 @@
 ---
 - hosts: choinka
+  connection: local
   become_user: root
   become: yes
   gather_facts: False
