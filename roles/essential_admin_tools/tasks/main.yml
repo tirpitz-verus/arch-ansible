@@ -36,6 +36,8 @@
       - zsh-completions
       # for zsh
       - python-pexpect
+      # to gen dns dig command
+      - bind
 
 
   #

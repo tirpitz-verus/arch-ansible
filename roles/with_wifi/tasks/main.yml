@@ -6,6 +6,7 @@
       name: "{{ item }}"
       state: present
     loop:
+      - netctl
       - dialog
       - iw
       - wpa_supplicant
