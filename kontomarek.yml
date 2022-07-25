@@ -44,10 +44,14 @@
       loop:
         # for yubikey
         - yubikey-manager
+        - yubikey-manager-qt
+        - yubikey-personalization
+        - yubikey-personalization-gui
         # mail client
         - thunderbird
         # network stuff - 192.168.151.1 DNS
         - openvpn
+        - systemd-resolvconf
         # java development
         - jdk17-openjdk
         - openjdk17-doc
@@ -108,6 +112,23 @@
         line: exec_always --no-startup-id xautolock -time 5 -locker "i3lock -fi /home/marek/.config/i3/lock.png"
         regexp: 'xautolock'
         validate: i3 -c %s -C
+
+    #
+    # VPN
+    #
+    - name: create stub-resolv symbolic link
+      ansible.builtin.file:
+        src: /run/systemd/resolve/stub-resolv.conf
+        dest: /etc/resolv.conf
+        owner: root
+        group: root
+        state: link
+        force: yes
+    - name: install openvpn-update-systemd-resolved
+      become_user: aur_builder
+      aur:
+        name:
+          - openvpn-update-systemd-resolved
 
     #  
     # cleanup
