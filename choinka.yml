@@ -67,12 +67,6 @@
         - realtime-privileges
         - pulseaudio-jack
         - ardour
-    - name: install aur guitar software
-      aur:
-        name: "{ item }"
-      become_user: aur_builder
-      loop:
-        - gtick
     - name: add user to realtime group
       user:
         name: marek
