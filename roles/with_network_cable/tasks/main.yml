@@ -1,5 +1,5 @@
 # with_network_cable - enable automatic cable network
-name: install network software
+- name: install network software
   pacman:
     name: "{{ item }}"
     state: present
