@@ -20,7 +20,6 @@ fi
 descr=$PING
 while [[ ${#descr} -lt 5 ]]; do
     descr="0$descr"
-    #echo $descr
 done
 
 echo "<span foreground=\"$color\"> $descr</span>"
