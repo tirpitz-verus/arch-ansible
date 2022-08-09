@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+OUT=""
+
+# do we have a mouse?
+if bluetoothctl devices | grep -q "MX Ergo" ; then
+  OUT="$OUT<span foreground=\"lime\"></span>"
+else
+  OUT="$OUT<span foreground=\"yellow\"></span>"
+fi
+
+# separate icons
+OUT="$OUT "
+
+# is it powered on?
+if bluetoothctl show | grep Powered | grep -q yes ; then
+  OUT="$OUT<span foreground=\"lime\"></span>"
+else
+  OUT="$OUT<span foreground=\"red\"></span>"
+fi
+
+echo "$OUT"
