@@ -154,6 +154,14 @@
     group: "{{ item }}"
     mode: u+x
   loop: "{{ users_to_setup }}"
+- name: copy bluetooth script for blocks
+  copy:
+    src: bluetooth.blocks
+    dest: "~{{ item }}/.config/i3/bluetooth.blocks"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: u+x
+  loop: "{{ users_to_setup }}"
 
 
 #
