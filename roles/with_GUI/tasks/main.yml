@@ -185,6 +185,7 @@
 # add dual screen script
 #
 - name: create script dir
+  become_user: "{{ item }}"
   file:
     path: "~{{ item }}/.screenlayout"
     state: directory
