@@ -78,7 +78,14 @@
     owner: root
     group: root
   when: "with_GUI__is_4k"
-  
+
+# for i3 check
+- name: check if bluetooth present
+  shell: "dmesg | grep -i blue"
+  register: bluetooth_grep_output
+  ignore_errors: True
+  changed_when: False
+
 #
 # setup i3
 #
@@ -162,6 +169,7 @@
     group: "{{ item }}"
     mode: u+x
   loop: "{{ users_to_setup }}"
+  when: bluetooth_grep_output.stdout != ""
 
 
 #
