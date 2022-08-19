@@ -30,3 +30,10 @@
   pacman:
     name: klavaro
     state: absent
+
+- name: 2022-08-19 remove rednotebook
+  pacman:
+    name: "{{ item }}"
+    state: absent
+  loop:
+    - rednotebook

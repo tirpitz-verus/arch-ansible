@@ -45,8 +45,6 @@
     - skanlite
     # manage e-books
     - calibre
-    # required by rednotebook (from AUR)
-    - binutils
     # firewall
     - firewalld
     # communicator
@@ -65,8 +63,6 @@
       - slack-desktop
       - skypeforlinux-stable-bin
       - zoom
-      # personal journal
-      - rednotebook
       # QMK keyboard setup
       - vial-appimage
 
