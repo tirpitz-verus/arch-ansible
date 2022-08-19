@@ -167,6 +167,12 @@
 #
 # setup ssh agent
 #
+- name: create ssh dir
+  become_user: "{{ item.key }}"
+  ansible.builtin.file:
+    path: ~/.ssh
+    state: directory
+  loop: "{{ q('dict', developers) }}"
 - name: copy ssh config file
   copy:
     src: ssh_config
