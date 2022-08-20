@@ -32,10 +32,12 @@ markup=pango
 interval=10
 {% endif %}
 
+{% if bluetooth_grep_output.stdout|length %}
 [bluetooth]
 command=$SCRIPT_DIR/bluetooth.blocks
 markup=pango
 interval=5
+{% endif %}
 
 [net]
 command=$SCRIPT_DIR/net.blocks
