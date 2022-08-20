@@ -52,10 +52,6 @@
         # network stuff - 192.168.151.1 DNS
         - openvpn
         - systemd-resolvconf
-        # java development
-        - jdk17-openjdk
-        - openjdk17-doc
-        - openjdk17-src
         # session locking
         - xautolock
         # save power with Intel CPU

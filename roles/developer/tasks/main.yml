@@ -24,12 +24,10 @@
     - java-openjfx-doc
     - java-openjfx-src
     - gradle
-    - jdk11-openjdk
-    - openjdk11-doc
-    - openjdk11-src
-    - jdk8-openjdk
-    - openjdk8-doc
-    - openjdk8-src
+    - jre17-openjdk
+    - jdk17-openjdk
+    - openjdk17-doc
+    - openjdk17-src
     - maven
     # docker
     - docker
