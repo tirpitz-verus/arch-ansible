@@ -49,6 +49,8 @@
     - firewalld
     # communicator
     - signal-desktop
+    # screen capture
+    - maim
 
 #
 # install from AUR
