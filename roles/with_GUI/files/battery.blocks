@@ -32,4 +32,4 @@ else
 fi
 
 # print output
-echo $SHORT_TEXT
+echo "$SHORT_TEXT"

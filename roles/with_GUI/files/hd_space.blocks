@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# check space in GB
+# filesystem | size | use_percentage | available | Use% | Mounted on
+OUT="$(df -h -BG | awk '{ORS=""} $6 ~ /^[/]boot|[/]$/ {
+  count++
+  mount_point = $6
+  use_percentage = int($5)
+  color = "lime"
+  if (use_percentage > 15) {
+    color = "yellow"
+  }
+  if (use_percentage > 50) {
+    color = "orange"
+  }
+  if (use_percentage > 75) {
+    color = "red"
+  }
+  size = int($2)
+  used = int($3)
+  available = size - used
+  separator = ""
+  if (count == 1) {
+    separator = " "
+  }
+  print "<span foreground=\""color"\">" mount_point " " available "G " use_percentage "%</span>" separator
+}')"
+
+echo "$OUT"
