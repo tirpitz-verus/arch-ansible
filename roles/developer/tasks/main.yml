@@ -46,9 +46,6 @@
   become_user: aur_builder
   aur:
     name:
-      # testing
-      - postman-bin
-      - soapui
       # IDE
       - jetbrains-toolbox
 

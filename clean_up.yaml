@@ -49,3 +49,11 @@
     - openjdk8-src
     - openjdk8-doc
     - jdk8-openjdk
+
+- name: 2023-02-06 remove unneeded testing tools
+  pacman:
+    name: "{{ item }}"
+    state: absent
+  loop:
+    - soapui
+    - postman-bin
