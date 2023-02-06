@@ -170,6 +170,14 @@
     mode: u+x
   loop: "{{ users_to_setup }}"
   when: bluetooth_grep_output.stdout != ""
+- name: copy hd_space script for blocks
+  copy:
+    src: hd_space.blocks
+    dest: "~{{ item }}/.config/i3/hd_space.blocks"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: u+x
+  loop: "{{ users_to_setup }}"
 
 
 #
