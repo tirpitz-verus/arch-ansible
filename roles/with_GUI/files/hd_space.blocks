@@ -7,7 +7,7 @@ OUT="$(df -h -BG | awk '{ORS=""} $6 ~ /^[/]boot|[/]$/ {
   mount_point = $6
   use_percentage = int($5)
   color = "lime"
-  if (use_percentage > 15) {
+  if (use_percentage > 25) {
     color = "yellow"
   }
   if (use_percentage > 50) {
