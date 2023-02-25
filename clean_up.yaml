@@ -57,3 +57,12 @@
   loop:
     - soapui
     - postman-bin
+
+- name: 2023-02-25 use spotify-launcher instead of repackaged AUR version of spotify (package)
+  pacman:
+    name: spotify
+    state: absent
+- name: 2023-02-25 use spotify-launcher instead of repackaged AUR version of spotify (script)
+  ansible.builtin.file:
+    path: /home/marek/.local/bin/spotify-hdpi.sh
+    state: absent
