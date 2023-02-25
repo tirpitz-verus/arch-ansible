@@ -2,7 +2,7 @@
 
 # install software required to run ansible
 pacman -Syu
-pacman -S vim ansible git screen tree man go base-devel netctl
+pacman -S vim ansible git screen tree man go base-devel netctl dhcpcd
 
 # setup aur_builder user
 if ! id -u aur_builder > /dev/null 2>&1
