@@ -58,6 +58,8 @@
         - powertop
         # web browser that can use blur in google meet
         - chromium
+        # rsync is needed for deployments
+        - rsync
 
     #
     # allow lid closed
