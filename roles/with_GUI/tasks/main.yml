@@ -178,7 +178,14 @@
     group: "{{ item }}"
     mode: u+x
   loop: "{{ users_to_setup }}"
-
+- name: copy cpu script for blocks
+  copy:
+    src: cpu.blocks
+    dest: "~{{ item }}/.config/i3/cpu.blocks"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: u+x
+  loop: "{{ users_to_setup }}"
 
 #
 # setup GUI greeter

@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+# read stats (assuming that first line contains combined stats for all CPUs)
+CPU_NOW=($(head -n1 /proc/stat))
+
+# interpret values
+CPU_USER=${CPU_NOW[1]}
+CPU_NICE=${CPU_NOW[2]}
+CPU_SYSTEM=${CPU_NOW[3]}
+IDLE_NOW=${CPU_NOW[4]}
+
+# current total time is
+NON_IDLE_NOW=$((CPU_USER+CPU_NICE+CPU_SYSTEM))
+
+# read previous value
+NON_IDLE_PATH="/tmp/cpu.blocks.non_idle"
+IDLE_PATH="/tmp/cpu.blocks.idle"
+
+if test ! -f "$NON_IDLE_PATH"; then
+    echo "$NON_IDLE_NOW" > "$NON_IDLE_PATH"
+fi
+if test ! -f "$IDLE_PATH"; then
+    echo "$IDLE_NOW" > "$IDLE_PATH"
+fi
+
+NON_IDLE_LAST=$(cat "$NON_IDLE_PATH")
+IDLE_LAST=$(cat "$IDLE_PATH")
+
+echo "$NON_IDLE_NOW" > "$NON_IDLE_PATH"
+echo "$IDLE_NOW" > "$IDLE_PATH"
+
+# calculate delta values
+NON_IDLE_DELTA=$((NON_IDLE_NOW-NON_IDLE_LAST))
+IDLE_DELTA=$((IDLE_NOW-IDLE_LAST))
+TOTAL_DELTA=$((NON_IDLE_DELTA+IDLE_DELTA))
+USED_CPU=$(((1000*NON_IDLE_DELTA/TOTAL_DELTA)/10))
+
+# print in color
+if [[ $USED_CPU -ge 90 ]] ; then
+    echo "<span foreground=\"red\"> $USED_CPU%</span>"
+elif [[ $USED_CPU -ge 66 ]] ; then
+    echo "<span foreground=\"orange\"> $USED_CPU%</span>"
+elif [[ $USED_CPU -ge 33 ]] ; then
+    echo "<span foreground=\"yellow\"> $USED_CPU%</span>"
+else
+    echo "<span foreground=\"lime\"> $USED_CPU%</span>"
+fi
