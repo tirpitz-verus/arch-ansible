@@ -66,3 +66,11 @@
   ansible.builtin.file:
     path: /home/marek/.local/bin/spotify-hdpi.sh
     state: absent
+
+- name: 2023-04-12 remove related Postman directories (not needed after 2023-02-06 Postman removal)
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - /home/marek/Postman
+    - /home/marek/.config/Postman
