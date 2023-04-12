@@ -35,13 +35,19 @@ IDLE_DELTA=$((IDLE_NOW-IDLE_LAST))
 TOTAL_DELTA=$((NON_IDLE_DELTA+IDLE_DELTA))
 USED_CPU=$(((1000*NON_IDLE_DELTA/TOTAL_DELTA)/10))
 
+# padding ping value
+PADDED=$USED_CPU
+while [[ ${#PADDED} -lt 3 ]]; do
+    PADDED=" $PADDED"
+done
+
 # print in color
 if [[ $USED_CPU -ge 90 ]] ; then
-    echo "<span foreground=\"red\"> $USED_CPU%</span>"
+    echo "<span foreground=\"red\"> $PADDED%</span>"
 elif [[ $USED_CPU -ge 66 ]] ; then
-    echo "<span foreground=\"orange\"> $USED_CPU%</span>"
+    echo "<span foreground=\"orange\"> $PADDED%</span>"
 elif [[ $USED_CPU -ge 33 ]] ; then
-    echo "<span foreground=\"yellow\"> $USED_CPU%</span>"
+    echo "<span foreground=\"yellow\"> $PADDED%</span>"
 else
-    echo "<span foreground=\"lime\"> $USED_CPU%</span>"
+    echo "<span foreground=\"lime\"> $PADDED%</span>"
 fi
