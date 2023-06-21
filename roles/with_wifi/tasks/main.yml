@@ -8,6 +8,7 @@
     loop:
       - netctl
       - dialog
+      # iwctl is the preferred tool
       - iw
       - wpa_supplicant
   - name: add a group wifi

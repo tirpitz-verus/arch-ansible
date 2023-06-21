@@ -63,3 +63,29 @@
     name: firewalld.service
     state: started
     enabled: yes
+
+#
+# setup brother DCP-L2532DW printer
+#
+- name: setup DCP-L2532DW printer
+  block:
+    - name: install DCP-L2532DW driver
+      become_user: aur_builder
+      aur:
+        name:
+          - brother-dcp-l2530dw
+    - name: install cups
+      pacman:
+        name: cups.service
+        state: present
+    - name: start cups
+      systemd:
+        name: cups
+        state: started
+        enabled: yes
+    - name: add users to lp group
+      user:
+        name: "{{ item }}"
+        groups: realtime
+        append: yes
+      loop: "{{ users_to_setup }}"
