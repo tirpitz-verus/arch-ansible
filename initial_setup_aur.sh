@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
 
-# install software required to run ansible
-pacman -Syu
-pacman -S vim ansible git screen tree man go base-devel grub efibootmgr netctl dhcpcd
-
 # setup aur_builder user
+
 if ! id -u aur_builder > /dev/null 2>&1
 then
 	useradd -m aur_builder
@@ -21,7 +18,3 @@ makepkg -si --noconfirm
 yay -S --noconfirm ansible-aur-git
 EOF
 fi
-
-# install grub
-grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
-grub-mkconfig -o /boot/grub/grub.cfg
