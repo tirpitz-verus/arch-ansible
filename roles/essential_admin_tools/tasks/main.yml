@@ -16,7 +16,6 @@
       - tree
       - htop
       - sudo
-      - pacmatic
       - pacman-contrib
       - reflector
       - pacman-mirrorlist

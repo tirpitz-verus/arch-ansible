@@ -74,3 +74,7 @@
   loop:
     - /home/marek/Postman
     - /home/marek/.config/Postman
+- name: 2023-06-25 stop using pacmatic (use yay instead)
+  pacman:
+    name: pacmatic
+    state: absent
