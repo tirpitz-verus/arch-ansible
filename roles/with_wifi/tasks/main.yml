@@ -1,32 +1,10 @@
 # with_wifi - 
 
 
-  - name: install dialog (for wifi-menu)
+  - name: install packages needed for wifi
     pacman:
       name: "{{ item }}"
       state: present
     loop:
-      - netctl
-      - dialog
       - iw
       - wpa_supplicant
-  - name: add a group wifi
-    group:
-      name: wifi
-      state: present
-  - name: set wifi-menu useage without password
-    lineinfile:
-      path: /etc/sudoers
-      line: '%wifi ALL=(ALL:ALLL) NOPASSWD: /bin/wifi-menu'
-      validate: 'visudo -cf %s'
-  - name: set netctl usage without password
-    lineinfile:
-      path: /etc/sudoers
-      line: '%wifi ALL=(ALL:ALL) NOPASSWD: /bin/netctl'
-      validate: 'visudo -cf %s'
-  - name: add userts to groups
-    user:
-      name: "{{ item }}"
-      append: True
-      groups: wifi 
-    loop: "{{ users_to_setup }}"

@@ -4,8 +4,6 @@
     name: "{{ item }}"
     state: present
   loop:
-    # network manager
-    - netctl
     # DHCP client
     - dhcpcd
 - name: enable dhcp client

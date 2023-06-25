@@ -4,3 +4,6 @@
 
 pacman -Syu
 pacman -S vim ansible git screen tree man go base-devel dhcpcd
+
+systemctl enable dhcpcd
+systemctl start dhcpcd
