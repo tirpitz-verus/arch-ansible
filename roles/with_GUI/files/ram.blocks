@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+# check RAM and SWAP space in GB
+# name | total | used | free | shared | buff/cache | available
+OUT="$(free --giga | awk '{ORS=""} {
+  if (NR == 1) {
+    # lets skip first line - it only has labels
+    next
+  }
+  name = $1
+  if (name == "Mem:") {
+    name = "RAM"
+  } else {
+    name = "SWAP"
+  }
+  total = int($2)
+  used = int($3)
+  use_percentage = int(used * 100 / total)
+  color = "lime"
+  if (use_percentage > 25) {
+    color = "yellow"
+  }
+  if (use_percentage > 50) {
+    color = "orange"
+  }
+  if (use_percentage > 75) {
+    color = "red"
+  }
+  separator = ""
+  # first line of free is labels
+  if (NR == 2) {
+    separator = " "
+  }
+  print "<span foreground=\""color"\">" name " " total "G " use_percentage "%</span>" separator
+}')"
+
+echo "$OUT"

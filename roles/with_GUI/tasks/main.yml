@@ -186,6 +186,14 @@
     group: "{{ item }}"
     mode: u+x
   loop: "{{ users_to_setup }}"
+- name: copy ram script for blocks
+  copy:
+    src: ram.blocks
+    dest: "~{{ item }}/.config/i3/ram.blocks"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: u+x
+  loop: "{{ users_to_setup }}"
 
 #
 # setup GUI greeter
