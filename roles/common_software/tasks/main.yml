@@ -27,6 +27,8 @@
     - maim
     # spotify launcher not to deal with changing PGP keys
     - spotify-launcher
+    # 7zip archives
+    - p7zip
 
 
 #
