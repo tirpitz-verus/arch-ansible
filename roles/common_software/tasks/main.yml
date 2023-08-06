@@ -29,6 +29,8 @@
     - spotify-launcher
     # 7zip archives
     - p7zip
+    - # *.torrent client
+    - qbittorrent
 
 
 #
