@@ -1,6 +1,6 @@
 # gaming - machine is used for playing video games
 
-- name: install steam
+- name: install gaming software
   pacman:
     name: "{{ item }}"
     state: present
