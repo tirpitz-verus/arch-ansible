@@ -36,6 +36,8 @@
       - python-pexpect
       # to gen dns dig command
       - bind
+      # sft gui client
+      - filezilla
 
 
   #
