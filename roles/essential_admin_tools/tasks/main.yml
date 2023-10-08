@@ -28,9 +28,6 @@
       - firefox
       - gnupg  
       - openssh
-      # file manager
-      - ranger
-      - w3m
       # cmd spreadsheet
       - sc
       - zsh
@@ -234,5 +231,33 @@
       line: 'PATH=$HOME/.local/bin:$PATH'
       mode: 'u=rw,go=r'
       create: yes
+    loop: "{{ users_to_setup }}"
+
+  #
+  # install and setup ranger file manager
+  #
+  - name: install ranger
+    pacman:
+      name: "{{ item }}"
+      state: present
+    loop:
+      - ranger
+      # to preview files
+      - w3m
+  - name: create config files
+    become_user: '{{ item }}'
+    shell: ranger --copy-config=all
+    loop: "{{ users_to_setup }}"
+  - name: show hidden files by default
+    lineinfile:
+      path: ~{{ item }}/.config/ranger/rc.conf
+      regexp: '^set show_hidden false'
+      line: 'set show_hidden true'
+    loop: "{{ users_to_setup }}"
+  - name: preview images by default
+    lineinfile:
+      path: ~{{ item }}/.config/ranger/rc.conf
+      regexp: '^set preview_images false'
+      line: 'set preview_images true'
     loop: "{{ users_to_setup }}"
 
