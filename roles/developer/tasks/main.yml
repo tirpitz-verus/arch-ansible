@@ -24,6 +24,8 @@
     - java-openjfx-doc
     - java-openjfx-src
     - gradle
+    - gradle-doc
+    - gradle-src
     - jre17-openjdk
     - jdk17-openjdk
     - openjdk17-doc
