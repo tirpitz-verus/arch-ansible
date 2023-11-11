@@ -31,6 +31,8 @@
     - p7zip
     # *.torrent client
     - qbittorrent
+    # knowledgebase software
+    - obsidian
 
 
 #
