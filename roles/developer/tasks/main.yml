@@ -16,13 +16,10 @@
     - git
     - vim
     # Java
-    - jre-openjdk
     - jdk-openjdk
     - openjdk-doc
     - openjdk-src
     - java-openjfx 
-    - java-openjfx-doc
-    - java-openjfx-src
     - gradle
     - gradle-doc
     - gradle-src
