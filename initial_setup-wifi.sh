@@ -4,7 +4,8 @@
 
 ./initial_setup_2_dhcpcd.sh || exit 1
 
-pacman -S iwd wpa_supplicant
+pacman -S iwd
+systemctl enable iwd.service
 
 ./initial_setup_3_aur.sh || exit 1
 
