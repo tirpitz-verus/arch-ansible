@@ -1,5 +1,0 @@
-all:
-  hosts:
-    kontomarek:
-  vars:
-    asible_connection: local
