@@ -78,3 +78,11 @@
   pacman:
     name: pacmatic
     state: absent
+
+- name: 2024-04-04 remove jre dependencies
+  pacman:
+    name: "{{ item }}"
+    state: absent
+    loop:
+      - jre17-openjdk
+      - jre21-openjdk

@@ -24,7 +24,6 @@
     - gradle-doc
     - gradle-src
     # java 17
-    - jre17-openjdk
     - jdk17-openjdk
     - openjdk17-doc
     - openjdk17-src
