@@ -4,6 +4,6 @@
   pacman:
     name: "{{ item }}"
     state: absent
-    loop:
-      - jre17-openjdk
-      - jre21-openjdk
+  loop:
+    - jre17-openjdk
+    - jre21-openjdk

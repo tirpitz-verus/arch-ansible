@@ -28,7 +28,6 @@
     - openjdk17-doc
     - openjdk17-src
     # java 21
-    - jre21-openjdk
     - jdk21-openjdk
     - openjdk21-doc
     - openjdk21-src
