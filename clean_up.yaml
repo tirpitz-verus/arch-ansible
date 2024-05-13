@@ -12,3 +12,8 @@
   pacman:
     name: skypeforlinux-stable-bin
     state: absent
+
+- name: 2024-05-10 remove vial-appimage
+  pacman:
+    name: vial-appimage
+    state: absent

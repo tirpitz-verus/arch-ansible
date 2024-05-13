@@ -56,9 +56,6 @@
       # communicators
       - slack-desktop
       - zoom
-      # QMK keyboard setup
-      - vial-appimage
-
 
 #
 # start firewall
