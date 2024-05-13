@@ -55,7 +55,6 @@
     name:
       # communicators
       - slack-desktop
-      - skypeforlinux-stable-bin
       - zoom
       # QMK keyboard setup
       - vial-appimage

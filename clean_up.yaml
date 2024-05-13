@@ -7,3 +7,8 @@
   loop:
     - jre17-openjdk
     - jre21-openjdk
+
+- name: 2024-05-10 remove skypeforlinux-stable-bin
+  pacman:
+    name: skypeforlinux-stable-bin
+    state: absent
