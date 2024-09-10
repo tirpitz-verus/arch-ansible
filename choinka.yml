@@ -79,29 +79,6 @@
           exec qjackctl
         marker: "# {mark} ANSIBLE MANAGED BLOCK enable run qjackctl"
 
-    # LLM
-    - name: install software for LLM stuff
-      pacman:
-        name: "{{ item }}"
-        state: present
-      loop:
-        # monitor GPU usage
-        - nvtop
-        # ROCm rocm-hip-sdk rocm-smi-lib
-        - rocm-hip-sdk
-        - rocm-smi-lib
-        # AMD's library for high-performance machine learning primitives.
-        - miopen-hip
-    - name: install software for LLM stuf from AUR
-      become_user: aur_builder
-      aur:
-        name: "{{ item }}"
-        state: present
-      loop:
-        - koboldcpp-bin
-        # llm chat using AMD GPU
-        # - koboldcpp-hipblas - takes too long to install with ansible, install separately
-
     # cleanup
     - name: include cleanup tasks
       include_tasks: clean_up.yaml
