@@ -16,27 +16,17 @@
     - with_SSD
     - with_wifi
     - office
-    - developer
-    - dropbox
+#    - developer
+#    - dropbox
     - common_software
-    - gaming
-
-  vars_prompt:
-    - name: "my_password"
-      prompt: "Enter password"
-      private: yes
+#    - gaming
 
   vars:
     with_GUI__is_4k: True
     users_to_setup:
       - root
       - marek
-    dropbox_users:
-      - marek
-    developers:
-      marek:
-        email: tirpitz-verus@gmail.com
-        fullname: Marek Lesiewski
+      - dorota
 
   tasks:
 
