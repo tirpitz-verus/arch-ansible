@@ -19,7 +19,7 @@
 #    - developer
 #    - dropbox
     - common_software
-#    - gaming
+    - gaming
 
   vars:
     with_GUI__is_4k: True
