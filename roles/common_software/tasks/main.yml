@@ -31,8 +31,10 @@
     - p7zip
     # *.torrent client
     - qbittorrent
-    # knowledgebase software
+    # knowledge base software
     - obsidian
+    # notifications software
+    - dunst
 
 
 #
@@ -65,3 +67,20 @@
     name: firewalld.service
     state: started
     enabled: yes
+
+#
+# copy dusnt config
+#
+- name: make sure dunst config dir exists
+  become_user: '{{ item }}'
+  file:
+    path: ~{{ item }}/.config/dunst
+    state: directory
+    recurse: yes
+  loop: "{{ users_to_setup }}"
+- name : copy dunst config
+  become_user: '{{ item }}'
+  copy:
+    dest: ~{{ item }}/.config/dunst/dunstrc
+    src: /etc/dunst/dunstrc
+  loop: "{{ users_to_setup }}"
