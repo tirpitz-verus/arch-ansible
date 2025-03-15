@@ -1,0 +1,33 @@
+# yubikey
+
+#
+# install from official repo
+#
+- name: install yubikey software
+  pacman:
+    name: "{{ item }}"
+    state: present
+  loop:
+    # official personalization app
+    - yubikey-personalization
+    - yubikey-personalization-gui
+    # for web browsers using FIDO
+    - libfido2
+
+#
+# install companion app from aur
+#
+- name: install yubikey software from aur
+  become_user: aur_builder
+  aur:
+    name: yubico-authenticator-bin
+
+#
+# enable pcscd.service for yubico-authenticator
+# so keys can be read using smart card interface
+#
+- name: start pcscd.service
+  systemd:
+    name: pcscd
+    enabled: yes
+    state: started
