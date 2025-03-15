@@ -19,6 +19,7 @@
     - office
     - common_software
     - gaming
+    - yubikey
 
   vars:
     with_GUI__is_4k: True
