@@ -13,3 +13,9 @@
     dest: ~{{ item }}/.local/bin/bluetooth_on.sh
     mode: +x
   loop: "{{ users_to_setup }}"
+
+- name: start bluetooth service
+  systemd:
+    name: bluetooth.service
+    state: started
+    enabled: yes
