@@ -1,5 +1,4 @@
 # with_GUI - install graphics drivers and windows
-# wifi_interface_name - name of the network interfeace to use for status bar (none means no)
 
 #
 # install drivers
@@ -224,4 +223,14 @@
   loop: "{{ users_to_setup }}"
   when: with_GUI__dualscreen is defined
 
-
+#
+# disable screen power saving / blanking
+#
+- name: disable dpms
+  copy:
+    src: 10-disable_dpms.conf
+    dest: "/etc/X11/xorg.conf.d/10-disable_dpms.conf"
+- name: disable screen blanking
+  copy:
+    src: 10-disable_screen_blanking.conf
+    dest: "/etc/X11/xorg.conf.d/10-disable_screen_blanking.conf"
