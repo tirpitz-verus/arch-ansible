@@ -35,6 +35,8 @@
     - obsidian
     # notifications software
     - dunst
+    # screenshot
+    - flameshot
 
 
 #
