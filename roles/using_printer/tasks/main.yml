@@ -1,0 +1,37 @@
+# using_printer
+
+- name: install printing software
+  pacman:
+    name: "{{ item }}"
+    state: present
+  loop:
+    # the linux printing service
+    - cups
+    # needed by printers to translate documents
+    - ghostscript
+
+- name: start & enable cups
+  systemd:
+    name: cups.service
+    state: started
+    enabled: yes
+
+- name: check if printer installed
+  shell: pacman -Qi brother-dcp-l2530dw
+  register: printer_driver_installed
+  ignore_errors: True
+  changed_when: False
+
+- name: install driver from from AUR
+  become_user: aur_builder
+  aur:
+    name: brother-dcp-l2530dw
+
+- name: add network printer if not installed
+  shell: lpadmin -p DCP-L2530DW-IPPeverywhere -E -v "ipp://192.168.0.53/ipp/print" -m everywhere
+  when: printer_driver_installed.rc != 0
+
+
+
+
+
