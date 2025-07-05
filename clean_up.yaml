@@ -32,3 +32,12 @@
     path: "~{{ item }}/.vimrc"
     state: absent
   loop: "{{ users_to_setup }}"
+
+- name: remove old java 17
+  pacman:
+    name: "{{ item }}"
+    state: absent
+  loop:
+    - openjdk17-doc
+    - openjdk17-src
+    - jdk17-openjdk

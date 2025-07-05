@@ -23,10 +23,6 @@
     - gradle
     - gradle-doc
     - gradle-src
-    # java 17
-    - jdk17-openjdk
-    - openjdk17-doc
-    - openjdk17-src
     # java 21
     - jdk21-openjdk
     - openjdk21-doc
