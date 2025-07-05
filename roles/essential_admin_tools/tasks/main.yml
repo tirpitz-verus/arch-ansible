@@ -22,6 +22,7 @@
       - zip
       - unzip
       - unrar
+      - 7zip
       - terminator
       - python-configobj # terminator 1.9.2 forgot to add it as a package dep
       # browsers
