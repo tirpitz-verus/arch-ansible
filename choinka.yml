@@ -5,23 +5,23 @@
   become: yes
   gather_facts: False
   roles:
-    - accounts_setup
-    - essential_admin_tools
-    - with_network_cable
-    - with_GUI
-    - in_poland
-    - with_hostname
-    - with_sound
-    - with_SSD
-    - developer
-    - dropbox
-    - logitech_wireless
-    - office
-    - common_software
-    - gaming
-    - yubikey
-    - with_bluetooth
-    - using_printer
+#    - accounts_setup
+#    - essential_admin_tools
+#    - with_network_cable
+#    - with_GUI
+#    - in_poland
+#    - with_hostname
+#    - with_sound
+#    - with_SSD
+#    - developer
+#    - dropbox
+#    - logitech_wireless
+#    - office
+#    - common_software
+#    - gaming
+#    - yubikey
+#    - with_bluetooth
+#    - using_printer
 
   vars:
     with_GUI__is_4k: True
@@ -55,32 +55,6 @@
         mode: 'u=rwx,go=r'
         owner: marek
         group: marek
-    #
-    # guitar stuff
-    #
-    - name: install guitar software
-      pacman:
-        name: "{{ item }}"
-        state: present
-      loop:
-        - jack2
-        - jack2-dbus
-        - qjackctl
-        - guitarix
-        - realtime-privileges
-        - pulseaudio-jack
-        - ardour
-    - name: add user to realtime group
-      user:
-        name: marek
-        groups: realtime
-        append: yes
-    - name: run qjackctl with i3
-      blockinfile:
-        path: /home/marek/.config/i3/config
-        block: |
-          exec qjackctl
-        marker: "# {mark} ANSIBLE MANAGED BLOCK enable run qjackctl"
 
     # cleanup
     - name: include cleanup tasks
