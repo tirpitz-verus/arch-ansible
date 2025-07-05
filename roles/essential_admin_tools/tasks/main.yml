@@ -7,6 +7,8 @@
       - neovim
       - vim-spell-en
       - vim-spell-pl
+      - ripgrep
+      - fd
       # some tools use it by default
       - nano
       - python-pip
@@ -244,3 +246,13 @@
       line: 'set preview_images true'
     loop: "{{ users_to_setup }}"
 
+#
+# install neovim kickstart
+#
+  - name: clone master branch of kickstart
+    ansible.builtin.git:
+      repo: https://github.com/nvim-lua/kickstart.nvim.git
+      dest: "~{{ item }}/.config/nvim"
+      single_branch: yes
+      version: master
+    loop: "{{ users_to_setup }}"
