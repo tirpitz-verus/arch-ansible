@@ -4,7 +4,7 @@
       state: present
     loop:
       - wget
-      - vim
+      - neovim
       - vim-spell-en
       - vim-spell-pl
       # some tools use it by default
@@ -99,26 +99,6 @@
       shell: /bin/zsh
     loop: "{{ users_to_setup }}"
     when: item != 'root'
-
-  #
-  # stuff for vim
-  #
-  - name: install vim-airline
-    pacman:
-      name: "{{ item }}"
-      state: present
-    loop:
-      - vim-airline
-      - vim-airline-themes
-      - powerline-fonts
-      # https://archlinux.org/groups/x86_64/vim-plugins/
-  - name: copy .vimrc for non-root
-    copy:
-      src: .vimrc
-      dest: "~{{ item }}/.vimrc"
-      owner: "{{ item }}"
-      group: "{{ item }}"
-    loop: "{{ users_to_setup }}"
 
   #
   # create bin dir for users

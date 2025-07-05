@@ -17,3 +17,18 @@
   pacman:
     name: vial-appimage
     state: absent
+
+- name: 2025-07-05 switch from vim to neovim - uninstall software
+  pacman:
+    name: "{{ item }}"
+    state: absent
+  loop:
+    - vim-airline
+    - vim-airline-themes
+    - powerline-fonts
+
+- name: 2025-07-05 switch from vim to neovim - remove files
+  ansible.builtin.file:
+    path: "~{{ item }}/.vimrc"
+    state: absent
+  loop: "{{ users_to_setup }}"

@@ -14,7 +14,7 @@
     state: present
   loop:
     - git
-    - vim
+    - neovim
     # Java current
     - jdk-openjdk
     - openjdk-doc
@@ -98,7 +98,7 @@
       email = "{{ item.value.email }}"
       name = "{{ item.value.fullname }}"
       [core]
-      editor=vim
+      editor=nvim 
       [pull]
       ff=only
   loop: "{{ q('dict', developers) }}"
