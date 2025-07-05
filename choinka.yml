@@ -5,22 +5,22 @@
   become: yes
   gather_facts: False
   roles:
-#    - accounts_setup
-#    - essential_admin_tools
-#    - with_network_cable
-#    - with_GUI
-#    - in_poland
-#    - with_hostname
-#    - with_sound
-#    - with_SSD
-#    - developer
-#    - dropbox
-#    - logitech_wireless
-#    - office
-#    - common_software
-#    - gaming
-#    - yubikey
-#    - with_bluetooth
+    - accounts_setup
+    - essential_admin_tools
+    - with_network_cable
+    - with_GUI
+    - in_poland
+    - with_hostname
+    - with_sound
+    - with_SSD
+    - developer
+    - dropbox
+    - logitech_wireless
+    - office
+    - common_software
+    - gaming
+    - yubikey
+    - with_bluetooth
     - using_printer
 
   vars:
