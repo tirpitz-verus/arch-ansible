@@ -9,6 +9,8 @@
     - cups
     # needed by printers to translate documents
     - ghostscript
+    # Brother SANE drivers
+    - brscan4
 
 - name: start & enable cups
   systemd:
@@ -31,7 +33,9 @@
   shell: lpadmin -p DCP-L2530DW-IPPeverywhere -E -v "ipp://192.168.0.53/ipp/print" -m everywhere
   when: printer_driver_installed.rc != 0
 
-
+- name: add network scanner if printer not installed
+  shell: brsaneconfig4 -a name="DCP-L2530DW" model="DCP-L2530DW" ip=192.168.0.53
+  when: printer_driver_installed.rc != 0
 
 
 
