@@ -23,8 +23,6 @@
     - firewalld
     # communicator
     - signal-desktop
-    # screen capture
-    - maim
     # spotify launcher not to deal with changing PGP keys
     - spotify-launcher
     # 7zip archives
@@ -35,9 +33,6 @@
     - obsidian
     # notifications software
     - dunst
-    # screenshot
-    - flameshot
-
 
 #
 # spotify-launcher post install
@@ -60,6 +55,8 @@
       # communicators
       - slack-desktop
       - zoom
+      # screen capture
+      - hyprshot
 
 #
 # start firewall
