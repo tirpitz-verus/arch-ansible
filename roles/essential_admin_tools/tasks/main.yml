@@ -41,7 +41,8 @@
       - bind
       # sft gui client
       - filezilla
-
+      # file manager
+      - yazi
 
   #
   # add multilib repo
