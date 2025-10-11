@@ -50,6 +50,8 @@
     - wl-clipboard # clipboard manager between wayland and unix pipes
     - hyprlock # session lock
     - cliphist # clipboard history manager
+    - xdg-desktop-portal-hyprland # for screensharing
+
 - name: install wayland related software from AUR
   become_user: aur_builder
   aur:

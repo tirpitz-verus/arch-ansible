@@ -7,13 +7,13 @@
   "spacing": 0, // Gaps between modules (4px)
   // Choose the order of the modules
   "modules-left": [
-    "hyprland/workspaces",
+    "hyprland/workspaces"
   ],
   "modules-center": [
   ],
   "modules-right": [
     "tray",
-    "pulseaudio",
+    "wireplumber",
     "bluetooth",
     "network",
     "cpu",
@@ -21,7 +21,7 @@
     "disk#disk1",
     "disk#disk2",
     "keyboard-state",
-    "clock",
+    "clock"
   ],
   // Modules configuration
   "disk#disk1": {
@@ -52,7 +52,7 @@
       "urgent": "",
       "active": "",
       "default": ""
-    },
+    }
   },
   "keyboard-state": {
     "numlock": false,
@@ -65,7 +65,7 @@
   },
   "tray": {
     // "icon-size": 21,
-    "spacing": 10,
+    "spacing": 10
     // "icons": {
     //   "blueman": "bluetooth",
     //   "TelegramDesktop": "$HOME/.local/share/icons/hicolor/16x16/apps/telegram.png"
@@ -88,28 +88,16 @@
     "tooltip-format-ethernet": "{ifname} via {gwaddr} ",
     "format-linked": "{ifname} (No IP) ",
     "tooltip-format": "{ifname} via {gwaddr} ",
-    "format-linked": "{ifname} (No IP) ",
     "format-disconnected": "⚠",
     "format-alt": "{ifname}: {ipaddr}"
   },
-  "pulseaudio": {
-    // "scroll-step": 1, // %, can be a float
+  "wireplumber": {
     "format": "{volume}% {icon}",
-    "format-bluetooth": "{volume}% {icon} {format_source}",
-    "format-bluetooth-muted": " {icon} {format_source}",
-    "format-muted": " {format_source}",
-    "format-source": "{volume}% ",
-    "format-source-muted": "",
-    "format-icons": {
-      "headphone": "",
-      "hands-free": "",
-      "headset": "",
-      "phone": "",
-      "portable": "",
-      "car": "",
-      "default": ["", "", ""]
-    },
-    "on-click": "pavucontrol"
+    "format-muted": "",
+    "on-click": "pwvucontrol",
+    "max-volume": 150,
+    "scroll-step": 0.2,
+    "format-icons": ["", "", ""]
   },
   "bluetooth": {
     "format": " {status}",

@@ -91,3 +91,18 @@
   ansible.builtin.file:
     path: "/etc/X11/xorg.conf.d/10-disable_screen_blanking.conf"
     state: absent
+
+#
+# 2025-10-11
+# swap PulseAudio for PipeWire
+#
+- name: uninstall pulseaudio
+  pacman:
+    name: "{{ item }}"
+    state: absent
+  loop:
+    - pavucontrol
+    - pulseaudio-alsa
+    - pulseaudio-equalizer
+    - pulseaudio-bluetooth
+    - pulseaudio

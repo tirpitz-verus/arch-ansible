@@ -1,23 +1,18 @@
 # with_sound - installs sound software
 
-  - name: install pulseaudio
-    pacman:
-      name: "{{ item }}"
-      state: present
-    loop:
-      - pulseaudio
-      - pavucontrol
-      - pulseaudio-alsa
-      - pulseaudio-equalizer
-  - name: check if bluetooth present
-    shell: "dmesg | grep -i blue"
-    register: bluetooth_grep_output
-    ignore_errors: True
-    changed_when: False
+- name: install pipewire
+  pacman:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - pipewire
+    - pipewire-pulse
+    - pipewire-audio
+    - wireplumber # session manager for pipewire
 
-  - name: install pulseaudio for bluetooth
-    pacman:
-      name: pulseaudio-bluetooth
-      state: present
-    when: bluetooth_grep_output.stdout != ""
+- name: install pipewire software from AUR
+  become_user: aur_builder
+  aur:
+    name: pwvucontrol # gui for pipewire
+
 
