@@ -24,7 +24,7 @@
   ignore_errors: True
   changed_when: False
 
-- name: install driver from from AUR
+- name: install driver from AUR
   become_user: aur_builder
   aur:
     name: brother-dcp-l2530dw
