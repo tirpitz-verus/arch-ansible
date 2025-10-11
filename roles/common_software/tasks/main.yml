@@ -43,7 +43,6 @@
     dest: ~{{ item }}/.config/spotify-launcher.conf
     src: spotify-launcher.conf
   loop: "{{ users_to_setup }}"
-  when: "with_GUI__is_4k"
 
 #
 # install from AUR

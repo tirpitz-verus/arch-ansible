@@ -22,7 +22,6 @@
     - gaming
 
   vars:
-    with_GUI__is_4k: True
     users_to_setup:
       - root
       - marek
