@@ -41,3 +41,53 @@
     - openjdk17-doc
     - openjdk17-src
     - jdk17-openjdk
+
+#
+# 2025-10-11
+# remove xorg and i3
+#
+- name: remove xorg and i3
+  pacman:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - xorg-server
+    - xorg-xrandr
+    - xorg-xbacklight
+    - xorg-xinput
+    - xorg-xprop
+    - arandr
+    - i3-wm
+    - i3blocks
+    - i3lock
+    - feh
+    - dmenu
+    - xorg-xinit
+    - xdm-archlinux
+- name: remove .xinitrc
+  ansible.builtin.file:
+    path: "~{{ item }}/.xinitrc"
+    state: absent
+  loop: "{{ users_to_setup }}"
+- name: remove .Xresources
+  ansible.builtin.file:
+    path: /etc/X11/xinit/.Xresources
+    state: absent
+- name: remove i3 dir
+  ansible.builtin.file:
+    path: "~{{ item }}/.config/i3"
+    state: absent
+  loop: "{{ users_to_setup }}"
+- name: remove .screenlayout
+  ansible.builtin.file:
+    path: "~{{ item }}/.screenlayout"
+    state: absent
+  loop: "{{ users_to_setup }}"
+- name: remove 10-disable_dpms.conf
+  ansible.builtin.file:
+    path: "/etc/X11/xorg.conf.d/10-disable_dpms.conf"
+    state: absent
+- name: remove 10-disable_screen_blanking.conf
+  ansible.builtin.file:
+    path: "/etc/X11/xorg.conf.d/10-disable_screen_blanking.conf"
+    state: absent

@@ -34,203 +34,82 @@
 #
 # install GUI 
 #
-- name: install xorg, i3 and fonts
+- name: install wayland and related software
   pacman:
     name: "{{ item }}"
     state: present
   loop:
-    - xorg-server
-    - xorg-xrandr
-    - xorg-xbacklight
-    - xorg-xinput
-    - xorg-xprop
-    - arandr
-    - i3-wm
-    - i3blocks
-    - i3lock 
-    - feh
-    - dmenu
-    - xorg-xinit
+    - hyprland
+    - waybar
+    - kitty # terminal
+    - dolphin # file manager
+    - wofi # app launcher
+    - hyprpaper # wallpapers backend
+    - waypaper # wallpapers chooser
+    - nwg-look # GTK themes
+    - wl-clipboard # clipboard manager between wayland and unix pipes
+    - hyprlock # session lock
+    - cliphist # clipboard history manager
+- name: install wayland related software from AUR
+  become_user: aur_builder
+  aur:
+    name: "{{ item }}"
+  loop:
+    - vimv # image viewer
+
+#
+# add users to input group
+#
+- name: add users to input group
+  ansible.builtin.user:
+    name: "{{ item }}"
+    groups: input
+    append: yes
+  loop: "{{ users_to_setup }}"
+
+#
+# setup hyprland
+#
+- name: copy kitty config
+  copy:
+    src: kitty
+    dest: "~{{ item }}/.config/"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    directory_mode: u
+  loop: "{{ users_to_setup }}"
+- name: copy waybar config
+  copy:
+    src: waybar
+    dest: "~{{ item }}/.config/"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    directory_mode: u
+  loop: "{{ users_to_setup }}"
+- name: copy hyprland & hyprpaper config
+  copy:
+    src: hypr
+    dest: "~{{ item }}/.config/"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    directory_mode: u
+  loop: "{{ users_to_setup }}"
+- name: copy waypaper config
+  copy:
+    src: waypaper
+    dest: "~{{ item }}/.config/"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    directory_mode: u
+  loop: "{{ users_to_setup }}"
+
+#
+# install GUI
+#
+- name: fonts
+  pacman:
+    name: "{{ item }}"
+    state: present
+  loop:
     - ttf-dejavu
     - otf-font-awesome
-    - xdm-archlinux
-
-#
-# setup x-org init
-#
-- name: copy xinit for users
-  template:
-    src: xinitrc.j2
-    dest: "~{{ item }}/.xinitrc"
-    force: true
-    owner: "{{ item }}"
-    group: "{{ item }}"
-    mode: +x
-  loop: "{{ users_to_setup }}"
-- assert:
-    that: with_GUI__is_4k is defined
-    msg: "'with_GUI__is_4k' needs to be defined"
-- name: configure for 4K
-  template:
-    src: xresources.j2
-    dest: /etc/X11/xinit/.Xresources
-    owner: root
-    group: root
-  when: "with_GUI__is_4k"
-
-# for i3 check
-- name: check if bluetooth present
-  shell: "dmesg | grep -i blue"
-  register: bluetooth_grep_output
-  ignore_errors: True
-  changed_when: False
-
-#
-# setup i3
-#
-- name: check if battery present
-  stat: 
-    path: /sys/class/power_supply/BAT0
-  register: battery
-  changed_when: False
-- name: register user templates
-  stat:
-    path: "{{ role_path }}/templates/{{ item }}_i3config.j2"
-  register: i3_user_templates
-  loop: "{{ users_to_setup }}"
-  changed_when: False
-- name: create i3 dir
-  file:
-    path: "~{{ item }}/.config/i3"
-    state: directory
-    owner: "{{ item }}"
-    group: "{{ item }}"
-  loop: "{{ users_to_setup }}"
-- name: copy generic i3 config
-  template:
-    src: i3config.j2
-    dest: "~{{ item }}/.config/i3/config"
-    owner: "{{ item }}"
-    group: "{{ item }}"
-  loop: "{{ users_to_setup }}"
-- name: overwrite generic i3 config with per user template
-  template:
-    src: "{{ item.item }}_i3config.j2"
-    dest: "/home/{{ item.item }}/.config/i3/config"
-    owner: "{{ item.item }}"
-    group: "{{ item.item }}"
-  loop: "{{ i3_user_templates.results }}"
-  when: item.stat.exists 
-- name: copy generic i3 blocks config
-  template:
-    src: i3blocks.conf.j2
-    dest: "~{{ item }}/.config/i3/i3blocks.conf"
-    owner: "{{ item }}"
-    group: "{{ item }}"
-  loop: "{{ users_to_setup }}"
-- name: copy wifi script for blocks
-  copy:
-    src: net.blocks
-    dest: "~{{ item }}/.config/i3/net.blocks"
-    owner: "{{ item }}"
-    group: "{{ item }}"
-    mode: u+x
-  loop: "{{ users_to_setup }}"
-- name: copy battery script for blocks
-  copy:
-    src: battery.blocks
-    dest: "~{{ item }}/.config/i3/battery.blocks"
-    owner: "{{ item }}"
-    group: "{{ item }}"
-    mode: u+x
-  loop: "{{ users_to_setup }}"
-- name: copy ping script for blocks
-  copy:
-    src: ping.blocks
-    dest: "~{{ item }}/.config/i3/ping.blocks"
-    owner: "{{ item }}"
-    group: "{{ item }}"
-    mode: u+x
-  loop: "{{ users_to_setup }}"
-- name: copy key_indicator script for blocks
-  copy:
-    src: key_indicator.blocks
-    dest: "~{{ item }}/.config/i3/key_indicator.blocks"
-    owner: "{{ item }}"
-    group: "{{ item }}"
-    mode: u+x
-  loop: "{{ users_to_setup }}"
-- name: copy bluetooth script for blocks
-  copy:
-    src: bluetooth.blocks
-    dest: "~{{ item }}/.config/i3/bluetooth.blocks"
-    owner: "{{ item }}"
-    group: "{{ item }}"
-    mode: u+x
-  loop: "{{ users_to_setup }}"
-  when: bluetooth_grep_output.stdout != ""
-- name: copy hd_space script for blocks
-  copy:
-    src: hd_space.blocks
-    dest: "~{{ item }}/.config/i3/hd_space.blocks"
-    owner: "{{ item }}"
-    group: "{{ item }}"
-    mode: u+x
-  loop: "{{ users_to_setup }}"
-- name: copy cpu script for blocks
-  copy:
-    src: cpu.blocks
-    dest: "~{{ item }}/.config/i3/cpu.blocks"
-    owner: "{{ item }}"
-    group: "{{ item }}"
-    mode: u+x
-  loop: "{{ users_to_setup }}"
-- name: copy ram script for blocks
-  copy:
-    src: ram.blocks
-    dest: "~{{ item }}/.config/i3/ram.blocks"
-    owner: "{{ item }}"
-    group: "{{ item }}"
-    mode: u+x
-  loop: "{{ users_to_setup }}"
-
-#
-# setup GUI greeter
-#
-- name: enable xdm
-  systemd:
-    name: xdm-archlinux
-    enabled: yes
-    state: started
-
-#
-# add dual screen script
-#
-- name: create script dir
-  become_user: "{{ item }}"
-  file:
-    path: "~{{ item }}/.screenlayout"
-    state: directory
-  loop: "{{ users_to_setup }}"
-  when: with_GUI__dualscreen is defined
-- name: add dual screen script
-  template:
-    src: dualscreen.sh.j2
-    dest: "~{{ item }}/.screenlayout/dualscreen.sh"
-    mode: u=xr
-    owner: "{{ item }}"
-    group: "{{ item }}"
-  loop: "{{ users_to_setup }}"
-  when: with_GUI__dualscreen is defined
-
-#
-# disable screen power saving / blanking
-#
-- name: disable dpms
-  copy:
-    src: 10-disable_dpms.conf
-    dest: "/etc/X11/xorg.conf.d/10-disable_dpms.conf"
-- name: disable screen blanking
-  copy:
-    src: 10-disable_screen_blanking.conf
-    dest: "/etc/X11/xorg.conf.d/10-disable_screen_blanking.conf"
