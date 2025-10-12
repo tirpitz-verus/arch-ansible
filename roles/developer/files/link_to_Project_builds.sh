@@ -21,6 +21,17 @@ for build_dir in "${build_dirs[@]}"; do
   build_dir_path="$PWD/$build_dir"
   if [[ -d $build_dir_path ]]; then
 
+    printf "build dir '$build_dir_path' found... "
+
+    # new path
+    target="$parent_for_build_dirs/$build_dir"
+
+    # if target already exists then we don't need to do anything
+    if [[ -d $target ]]; then
+        printf "but it was already linked, skipping\n"
+        continue
+    fi
+
     # make sure parent directory for builds exists
     mkdir -p "$parent_for_build_dirs"
 
@@ -34,5 +45,7 @@ for build_dir in "${build_dirs[@]}"; do
     target="$parent_for_build_dirs/$build_dir"
     link_name="$build_dir_path"
     ln --symbolic --verbose "$target" "$link_name"
+
+    printf "linked to '$target'\n"
   fi
 done
