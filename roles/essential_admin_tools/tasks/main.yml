@@ -44,6 +44,13 @@
       # file manager
       - yazi
 
+  - name: install essential admin software from AUR
+    become_user: aur_builder
+    aur:
+      name: "{{ item }}"
+    loop:
+      - brave-bin # backup in case firefox breaks
+
   #
   # add multilib repo
   #
