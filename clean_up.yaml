@@ -1,47 +1,5 @@
 # list of general cleanup tasks
 
-- name: 2024-04-04 remove jre dependencies
-  pacman:
-    name: "{{ item }}"
-    state: absent
-  loop:
-    - jre17-openjdk
-    - jre21-openjdk
-
-- name: 2024-05-10 remove skypeforlinux-stable-bin
-  pacman:
-    name: skypeforlinux-stable-bin
-    state: absent
-
-- name: 2024-05-10 remove vial-appimage
-  pacman:
-    name: vial-appimage
-    state: absent
-
-- name: 2025-07-05 switch from vim to neovim - uninstall software
-  pacman:
-    name: "{{ item }}"
-    state: absent
-  loop:
-    - vim-airline
-    - vim-airline-themes
-    - powerline-fonts
-
-- name: 2025-07-05 switch from vim to neovim - remove files
-  ansible.builtin.file:
-    path: "~{{ item }}/.vimrc"
-    state: absent
-  loop: "{{ users_to_setup }}"
-
-- name: remove old java 17
-  pacman:
-    name: "{{ item }}"
-    state: absent
-  loop:
-    - openjdk17-doc
-    - openjdk17-src
-    - jdk17-openjdk
-
 #
 # 2025-10-11
 # remove xorg and i3
