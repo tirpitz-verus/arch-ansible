@@ -115,3 +115,5 @@
   loop:
     - ttf-dejavu
     - otf-font-awesome
+    - ttf-jetbrains-mono
+    - ttf-jetbrains-mono-nerd
