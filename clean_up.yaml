@@ -106,3 +106,12 @@
     - pulseaudio-equalizer
     - pulseaudio-bluetooth
     - pulseaudio
+
+#
+# 2025-11-21
+# remove bluetooth_on script - bluetooth is on by default now
+- name: remove bluetooth_on.sh script
+  ansible.builtin.file:
+    path: ~{{ item }}/.local/bin/bluetooth_on.sh
+    state: absent
+  loop: "{{ users_to_setup }}"

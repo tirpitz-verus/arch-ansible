@@ -2,17 +2,11 @@
 
 - name: install bluetooth software
   pacman:
-    name: bluez-utils
+    name: "{{ item }}"
     state: present
-
-
-- name: create bluetooth script
-  become_user: '{{ item }}'
-  copy:
-    src: bluetooth_on.sh
-    dest: ~{{ item }}/.local/bin/bluetooth_on.sh
-    mode: +x
-  loop: "{{ users_to_setup }}"
+  loop:
+    - bluez
+    - bluez-utils
 
 - name: start bluetooth service
   systemd:
