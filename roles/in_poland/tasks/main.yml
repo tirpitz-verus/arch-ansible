@@ -21,7 +21,6 @@
     dest: "/etc/vconsole.conf"
     content: |
       KEYMAP=pl
-      FONT=Lat2-Terminus16.psfu.gz
       FONT_MAP=8859-2
 
 # setup locales
