@@ -55,15 +55,6 @@
       "default": ""
     }
   },
-  "keyboard-state": {
-    "numlock": false,
-    "capslock": true,
-    "format": "{name} {icon}",
-    "format-icons": {
-      "locked": "",
-      "unlocked": ""
-    }
-  },
   "tray": {
     // "icon-size": 21,
     "spacing": 10
