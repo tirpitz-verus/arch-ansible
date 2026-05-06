@@ -55,6 +55,14 @@
         owner: marek
         group: marek
 
+    #
+    # activitywatch
+    #
+    - name: install activitywatch
+      become_user: aur_builder
+      aur:
+        name: activitywatch-bin
+
     # cleanup
     - name: include cleanup tasks
       include_tasks: clean_up.yaml
