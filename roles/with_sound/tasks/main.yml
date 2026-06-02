@@ -8,6 +8,7 @@
     - pipewire
     - pipewire-pulse
     - pipewire-audio
+    - pipewire-alsa
     - wireplumber # session manager for pipewire
 
 - name: install pipewire software from AUR
