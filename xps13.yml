@@ -6,7 +6,7 @@
   gather_facts: False
   roles:
     - accounts_setup
-    - essential_admin_tools      
+    - essential_admin_tools
     - with_GUI
     - in_poland
     - with_hostname
@@ -14,10 +14,9 @@
     - with_battery
     - with_sound
     - with_SSD
-    - with_wifi
+    - developer
+    - dropbox
     - office
-#    - developer
-#    - dropbox
     - common_software
     - gaming
 
