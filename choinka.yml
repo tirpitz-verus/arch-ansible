@@ -22,6 +22,7 @@
     - yubikey
     - with_bluetooth
     - using_printer
+    - with_ai
 
   vars:
     users_to_setup:

@@ -5,6 +5,7 @@
     loop:
       - wget
       - neovim
+      - tree-sitter # needed by kickstart
       - vim-spell-en
       - vim-spell-pl
       - ripgrep
@@ -31,8 +32,6 @@
       - firefox
       - gnupg  
       - openssh
-      # cmd spreadsheet
-      - sc
       - zsh
       - zsh-completions
       # for zsh

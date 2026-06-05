@@ -73,3 +73,11 @@
     path: ~{{ item }}/.local/bin/bluetooth_on.sh
     state: absent
   loop: "{{ users_to_setup }}"
+
+#
+# 2026-06-04
+# remove sc (spreadsheets in commandline)
+- name: remove sc
+  pacman:
+    name: sc
+    state: absent

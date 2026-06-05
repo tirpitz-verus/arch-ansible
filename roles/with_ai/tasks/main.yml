@@ -1,0 +1,7 @@
+- name: install ai software
+  become_user: aur_builder
+  aur:
+    use: yay
+    name: "{{ item }}"
+  loop:
+    - opencode-bin

@@ -19,6 +19,7 @@
     - office
     - common_software
     - gaming
+    - with_ai
 
   vars:
     users_to_setup:

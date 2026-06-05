@@ -3,6 +3,7 @@
 # developers:
 #   <username>:
 #     email: <email address>
+#     fullname: <full name>
 
 - assert:
     that: developers is defined
