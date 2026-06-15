@@ -1,5 +1,5 @@
 # with_GUI - install graphics drivers and windows
-
+#
 #
 # install drivers
 #
@@ -11,14 +11,14 @@
   pacman:
     name: "{{ item }}"
     state: present
-  loop:    
+  loop:
     - mesa
     - libva-mesa-driver
 - name: install Radeon drivers
   pacman:
     name: "{{ item }}"
     state: present
-  loop:    
+  loop:
     - xf86-video-amdgpu
     - vulkan-radeon
   when: "'Radeon' in vga_output.stdout"
@@ -26,13 +26,13 @@
   pacman:
     name: "{{ item }}"
     state: present
-  loop:    
+  loop:
     - xf86-video-intel
     - vulkan-intel
   when: "'Intel' in vga_output.stdout"
 
 #
-# install GUI 
+# install GUI
 #
 - name: install wayland and related software
   pacman:
@@ -117,3 +117,18 @@
     - otf-font-awesome
     - ttf-jetbrains-mono
     - ttf-jetbrains-mono-nerd
+
+#
+# prefer dark scheme for gtk
+#
+- name: read gtk color-scheme
+  shell: gsettings get org.gnome.desktop.interface color-scheme
+  register: gtk_color_scheme
+  changed_when: False
+  loop: "{{ users_to_setup }}"
+- name: set gtk color-scheme to dark
+  become_user: "{{ item.item }}"
+  shell: gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+  when: "'prefer-dark' not in item.stdout"
+  loop: "{{ gtk_color_scheme.results }}"
+
