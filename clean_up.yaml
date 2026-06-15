@@ -7,3 +7,17 @@
   pacman:
     name: sc
     state: absent
+
+#
+# 2026-06-14
+# remove pre lua hyprland configuration files
+- name: remove old main hyprland config
+  file:
+    path: "~{{ item }}/.config/hyprland.conf"
+    state: absent
+  loop: "{{ users_to_setup }}"
+- name: remove dracula colors hyprland config
+  file:
+    path: "~{{ item }}/.config/dracula_colors.conf"
+    state: absent
+  loop: "{{ users_to_setup }}"

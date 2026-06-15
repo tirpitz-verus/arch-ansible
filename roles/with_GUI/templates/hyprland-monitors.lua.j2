@@ -1,0 +1,23 @@
+-- #######################################################################################
+-- HYPRLAND LUA CONFIG
+-- MONITORS
+-- #######################################################################################
+
+-- default
+hl.monitor({
+    output   = "{{ monitors.main.output }}",
+    mode     = "{{ monitors.main.mode }}",
+    position = "0x0",
+    scale    = 1,
+})
+
+{%  if monitors.skyzone %}
+-- skyzone cobra
+hl.monitor({
+    output   = "{{ monitors.skyzone.output }}",
+    mode     = "preferred",
+    position = "auto",
+    scale    = 1,
+    mirror   = "{{ monitors.skyzone.mirror }}",
+})
+{% endif %}

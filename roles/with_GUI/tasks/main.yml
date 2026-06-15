@@ -1,5 +1,23 @@
 # with_GUI - install graphics drivers and windows
 #
+# role expects:
+#
+# monitors:
+#   main:
+#     output: "xxx"
+#     mode: "xxx"
+#
+# also skyzone cobra is optional:
+#  skyzone:
+#    output: "xxxx"
+#    mirror: "xxxx"
+
+- name: test if required vars are set
+  assert:
+    that:
+      - monitors.main.output is defined
+      - monitors.main.mode is defined
+
 #
 # install drivers
 #
@@ -88,10 +106,33 @@
     group: "{{ item }}"
     directory_mode: u
   loop: "{{ users_to_setup }}"
-- name: copy hyprland & hyprpaper config
+- name: copy hyprpaper config
   copy:
-    src: hypr
-    dest: "~{{ item }}/.config/"
+    src: hypr/hyprpaper.conf
+    dest: "~{{ item }}/.config/hypr/"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    directory_mode: u
+  loop: "{{ users_to_setup }}"
+- name: copy hyprlock config
+  copy:
+    src: hypr/hyprlock.conf
+    dest: "~{{ item }}/.config/hypr/"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    directory_mode: u
+  loop: "{{ users_to_setup }}"
+- name: copy hyprland-monitors.lua before hyprland.lua is copied (so hot reload isn't broken)
+  template:
+    src: templates/hyprland-monitors.lua.j2
+    dest: "~{{ item }}/.config/hypr/hyprland-monitors.lua"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+  loop: "{{ users_to_setup }}"
+- name: copy hyprland config
+  copy:
+    src: hypr/hyprland.lua
+    dest: "~{{ item }}/.config/hypr/"
     owner: "{{ item }}"
     group: "{{ item }}"
     directory_mode: u

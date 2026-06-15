@@ -32,37 +32,44 @@
       - marek
     developers: "{{ vault_developers }}"
     wegiel_ip: "{{ vault_wegiel_ip }}"
+    monitors:
+      main:
+        output: "HDMI-A-1"
+        mode: "1920x1080@60.00"
+      skyzone:
+        output: "DP-1"
+        mirror: "HDMI-A-1"
 
   tasks:
-    #
-    # install CPU microcode upgreade
-    #
-    - name: install AMD CPU microcode upgreades
-      pacman:
-        name: amd-ucode
-        state: present
-    #
-    # prepare backup to wegiel
-    #
-    - name: install rsync
-      pacman:
-        name: rsync
-        state: present
-    - name: create backup script
-      template:
-        src: choinka_backup_to_wegiel.sh
-        dest: ~marek/.local/bin/backup_to_wegiel
-        mode: 'u=rwx,go=r'
-        owner: marek
-        group: marek
-
-    #
-    # activitywatch
-    #
-    - name: install activitywatch
-      become_user: aur_builder
-      aur:
-        name: activitywatch-bin
+#    #
+#    # install CPU microcode upgreade
+#    #
+#    - name: install AMD CPU microcode upgreades
+#      pacman:
+#        name: amd-ucode
+#        state: present
+#    #
+#    # prepare backup to wegiel
+#    #
+#    - name: install rsync
+#      pacman:
+#        name: rsync
+#        state: present
+#    - name: create backup script
+#      template:
+#        src: choinka_backup_to_wegiel.sh
+#        dest: ~marek/.local/bin/backup_to_wegiel
+#        mode: 'u=rwx,go=r'
+#        owner: marek
+#        group: marek
+#
+#    #
+#    # activitywatch
+#    #
+#    - name: install activitywatch
+#      become_user: aur_builder
+#      aur:
+#        name: activitywatch-bin
 
     # cleanup
     - name: include cleanup tasks
