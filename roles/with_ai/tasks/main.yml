@@ -5,3 +5,4 @@
     name: "{{ item }}"
   loop:
     - opencode-bin
+    - koboldcpp-bin
