@@ -5,7 +5,8 @@
 # dist - JS projects
 # build - gradle and JS project
 # node_modules - node.js modules
-build_dirs=(target out dist build node_modules)
+# .gradle - gradle distribution dir
+build_dirs=(target out dist build node_modules .gradle)
 
 is_build_dir_name() {
   local name
@@ -64,8 +65,14 @@ link_build_dir() {
 # other subdirs (hidden dirs and symlinks are not followed)
 process_dir() {
   local dir="$1"
-  local entry
+  local name entry
 
+  # build dirs are looked up by name, so hidden ones (.gradle) are found too
+  for name in "${build_dirs[@]}"; do
+    [[ -d $dir/$name ]] && link_build_dir "$dir/$name"
+  done
+
+  # the glob does not match hidden dirs
   for entry in "$dir"/*/; do
     # strip trailing slash added by the glob
     entry="${entry%/}"
@@ -73,9 +80,8 @@ process_dir() {
     # glob did not match anything
     [[ -e $entry ]] || continue
 
-    if is_build_dir_name "${entry##*/}"; then
-      link_build_dir "$entry"
-    elif [[ ! -L $entry ]]; then
+    /
+    if ! is_build_dir_name "${entry##*/}" && [[ ! -L $entry ]]; then
       process_dir "$entry"
     fi
   done
