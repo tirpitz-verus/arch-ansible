@@ -8,6 +8,16 @@
 # .gradle - gradle distribution dir
 build_dirs=(target out dist build node_modules .gradle)
 
+projects_dir="$HOME/Projects"
+builds_dir="$HOME/Project_builds"
+
+# only work inside ~/Projects, anywhere else (e.g. ~ or /) this would
+# move unrelated dirs that happen to have a build dir name
+if [[ $PWD != "$projects_dir" && $PWD != "$projects_dir"/* ]]; then
+  printf "'%s' is not inside '%s', aborting\n" "$PWD" "$projects_dir" >&2
+  exit 1
+fi
+
 is_build_dir_name() {
   local name
   for name in "${build_dirs[@]}"; do
@@ -27,9 +37,8 @@ is_tracked_by_git() {
 link_build_dir() {
   local build_dir_path="$1"
 
-  # get project path after ~/Projects
-  # it will either get the part after Projects or the whole path
-  local target="$HOME/Project_builds${build_dir_path##*/Projects}"
+  # same path, but below ~/Project_builds instead of ~/Projects
+  local target="$builds_dir${build_dir_path#"$projects_dir"}"
 
   printf "build dir '%s' found... " "$build_dir_path"
 
@@ -80,7 +89,8 @@ process_dir() {
     # glob did not match anything
     [[ -e $entry ]] || continue
 
-    /
+    # recurse into ordinary subdirs only: build dirs were handled above
+    # (never look inside them) and symlinks could lead outside the project
     if ! is_build_dir_name "${entry##*/}" && [[ ! -L $entry ]]; then
       process_dir "$entry"
     fi
