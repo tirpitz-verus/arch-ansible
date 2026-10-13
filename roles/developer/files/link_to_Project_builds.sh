@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
 
-# get project path after ~/Projects
-# it will either get the part after Projects or the whole path
-project_path="${PWD##*/Projects}"
-
-# create directory for project files
-parent_for_build_dirs="$HOME/Project_builds$project_path"
-
 # target - maven and rustc
 # out - Intellij Idea
 # dist - JS projects
@@ -14,38 +7,78 @@ parent_for_build_dirs="$HOME/Project_builds$project_path"
 # node_modules - node.js modules
 build_dirs=(target out dist build node_modules)
 
-# for each build_dir
-for build_dir in "${build_dirs[@]}"; do
+is_build_dir_name() {
+  local name
+  for name in "${build_dirs[@]}"; do
+    [[ $name == "$1" ]] && return 0
+  done
+  return 1
+}
 
-  # if a build dir exists
-  build_dir_path="$PWD/$build_dir"
-  if [[ -d $build_dir_path ]]; then
+# inside a git repo only ignored dirs are treated as build dirs,
+# so a source dir (e.g. a java package) named 'build' is left alone
+is_tracked_by_git() {
+  local parent="${1%/*}"
+  git -C "$parent" rev-parse --is-inside-work-tree &>/dev/null || return 1
+  ! git -C "$parent" check-ignore --quiet "$1"
+}
 
-    printf "build dir '$build_dir_path' found... "
+link_build_dir() {
+  local build_dir_path="$1"
 
-    # new path
-    target="$parent_for_build_dirs/$build_dir"
+  # get project path after ~/Projects
+  # it will either get the part after Projects or the whole path
+  local target="$HOME/Project_builds${build_dir_path##*/Projects}"
 
-    # if target already exists then we don't need to do anything
-    if [[ -d $target ]]; then
-        printf "but it was already linked, skipping\n"
-        continue
-    fi
+  printf "build dir '%s' found... " "$build_dir_path"
 
-    # make sure parent directory for builds exists
-    mkdir -p "$parent_for_build_dirs"
-
-    # copy build dir to new location
-    cp -r "$build_dir_path" "$parent_for_build_dirs"
-
-    # remove old build_dir
-    rm -r "$build_dir_path"
-
-    # create symlink
-    target="$parent_for_build_dirs/$build_dir"
-    link_name="$build_dir_path"
-    ln --symbolic --verbose "$target" "$link_name"
-
-    printf "linked to '$target'\n"
+  if [[ -L $build_dir_path ]]; then
+    printf "but it was already linked, skipping\n"
+    return
   fi
-done
+
+  if is_tracked_by_git "$build_dir_path"; then
+    printf "but it is not ignored by git, skipping\n"
+    return
+  fi
+
+  # a real build dir in the project wins over whatever is left in the target
+  if [[ -e $target || -L $target ]]; then
+    printf "replacing existing '%s'... " "$target"
+    rm -rf -- "$target" || return
+  fi
+
+  # make sure parent directory for builds exists
+  mkdir -p "${target%/*}" || return
+
+  # move build dir to new location
+  mv "$build_dir_path" "$target" || return
+
+  # create symlink
+  ln --symbolic "$target" "$build_dir_path" || return
+
+  printf "linked to '%s'\n" "$target"
+}
+
+# link build dirs found in the given dir, then do the same for all its
+# other subdirs (hidden dirs and symlinks are not followed)
+process_dir() {
+  local dir="$1"
+  local entry
+
+  for entry in "$dir"/*/; do
+    # strip trailing slash added by the glob
+    entry="${entry%/}"
+
+    # glob did not match anything
+    [[ -e $entry ]] || continue
+
+    if is_build_dir_name "${entry##*/}"; then
+      link_build_dir "$entry"
+    elif [[ ! -L $entry ]]; then
+      process_dir "$entry"
+    fi
+  done
+}
+
+process_dir "$PWD"
