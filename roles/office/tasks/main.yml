@@ -15,3 +15,5 @@
     - xreader
     # calculatror
     - calc
+    # transfrom office to other formats
+    - pandoc-cli
