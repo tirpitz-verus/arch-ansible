@@ -24,22 +24,6 @@ local pink             = "rgb(FF79C6)"
 
 require("hyprland-monitors")
 
--- hl.monitor({
---     output   = "HDMI-A-1",
---     mode     = "1920x1080@60.00",
---     position = "0x0",
---     scale    = 1,
--- })
---
--- -- skyzone cobra
--- hl.monitor({
---     output   = "DP-3",
---     mode     = "preferred",
---     position = "auto",
---     scale    = 1,
---     mirror   = "HDMI-A-1",
--- })
-
 ---------------------
 ---- MY PROGRAMS ----
 ---------------------
@@ -54,18 +38,19 @@ local menu        = "wofi --show drun"
 -------------------
 
 hl.on("hyprland.start", function ()
+    -- xdg-desktop-portal-hyprland
+    hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
     -- basic
     hl.exec_cmd("hyprpaper")
     hl.exec_cmd("waybar")
     hl.exec_cmd(terminal, { workspace = "1 silent" })
     hl.exec_cmd("obsidian", { workspace = "8 silent" })
     -- activity watching
-    hl.exec_cmd("aw-qt")
+    hl.exec_cmd("sleep 5 && aw-qt")
+    hl.exec_cmd("adhd run")
     -- clipboard history manager
     hl.exec_cmd("wl-paste --type text --watch cliphist store")   -- stores only text
     hl.exec_cmd("wl-paste --type image --watch cliphist store")  -- stores only images
-    -- xdg-desktop-portal-hyprland
-    hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
 end)
 
 -------------------------------
@@ -224,8 +209,8 @@ hl.config({
         kb_options = "",
         kb_rules   = "",
 
-        follow_mouse  = 1,
-        mouse_refocus = true,
+        follow_mouse  = 2,
+        mouse_refocus = false,
 
         sensitivity = 0, -- -1.0 - 1.0, 0 means no modification.
 
@@ -345,4 +330,12 @@ hl.window_rule({
     name = "bind-jetbrains-idea-to-workspace-7",
     match = { class = "jetbrains-idea" },
     workspace = 7,
+})
+
+hl.window_rule({
+    name   = "adhd-helper-popup",
+    match  = { class = "^(adhd-helper)$" },
+    float  = true,
+    pin    = true,
+    center = true,
 })
