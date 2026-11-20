@@ -6,7 +6,8 @@
 # build - gradle and JS project
 # node_modules - node.js modules
 # .gradle - gradle distribution dir
-build_dirs=(target out dist build node_modules .gradle)
+# .venv - python virtual environment
+build_dirs=(target out dist build node_modules .gradle .venv)
 
 projects_dir="$HOME/Projects"
 builds_dir="$HOME/Project_builds"
