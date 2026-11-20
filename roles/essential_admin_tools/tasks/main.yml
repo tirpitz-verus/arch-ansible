@@ -229,9 +229,18 @@
 # install neovim kickstart
 #
   - name: clone master branch of kickstart
+    become_user: '{{ item }}'
     ansible.builtin.git:
       repo: https://github.com/nvim-lua/kickstart.nvim.git
       dest: "~{{ item }}/.config/nvim"
       single_branch: yes
       version: master
+      force: yes
+    loop: "{{ users_to_setup }}"
+  - name: overwrite kickstart init.lua with my own
+    become_user: '{{ item }}'
+    copy:
+      src: init.lua
+      dest: "~{{ item }}/.config/nvim/init.lua"
+      mode: 'u=rw,go=r'
     loop: "{{ users_to_setup }}"
