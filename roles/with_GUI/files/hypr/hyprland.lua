@@ -241,6 +241,8 @@ local my_bindings = {
     { mainMod .. " + R", hl.dsp.exec_cmd(menu), {}, "run menu (wofi)" },
     { mainMod .. " + L", hl.dsp.exec_cmd("hyprlock"), {}, "lock screen" },
     { mainMod .. " + V", hl.dsp.exec_cmd("cliphist list | wofi --dmenu --pre-display-cmd \"echo '%s' | cut -f 2\" | cliphist decode | wl-copy"), {}, "list clipboard history" },
+    -- shortcuts for apps
+    { "B", hl.dsp.global( "discord:discord-push-to-talk" ), { non_consuming = true },"Discord push to talk" },
     -- manipulate windows
     { mainMod .. " + C", hl.dsp.window.close(), {}, "close window" },
     { mainMod .. " + B", hl.dsp.window.float({ action = "toggle" }), {}, "toggle floating window" },
